@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:up2u_base/src/features/profile/components/custom_button_widget.dart';
 
 import '../../shared/components/custom_app_bar_widget.dart';
 import '../../shared/components/custom_elevated_button_widget.dart';
@@ -77,7 +76,8 @@ class _AccountPageState extends State<AccountPage> {
                     //TODO: Substituir por imagem do usuário
                     child: CircleAvatar(
                       radius: 62,
-                      backgroundImage: AssetImage('images/profile_picture.jpeg')
+                      backgroundImage:
+                          const AssetImage('images/profile_picture.jpeg')
 
                       /*  const NetworkImage(
                           'https://images.pexels.com/photos/1085517/pexels-photo-1085517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') */

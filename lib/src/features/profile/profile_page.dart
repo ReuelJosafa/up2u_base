@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:up2u_base/src/features/account/account_page.dart';
-import 'package:up2u_base/src/features/home/home_page.dart';
 import 'package:up2u_base/src/features/use_terms/use_terms_page.dart';
 
 import '../../shared/components/custom_app_bar_widget.dart';
