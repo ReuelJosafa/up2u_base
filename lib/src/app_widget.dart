@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         surface: Color(0xFF0D0D0D),
         onBackground: Colors.white,
       ),
+      dividerColor: Colors.transparent,
       toggleableActiveColor: const Color(0xFFD3A62A),
       splashColor: const Color(0xFF4C3513),
       buttonTheme: const ButtonThemeData(

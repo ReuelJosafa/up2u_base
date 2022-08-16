@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:up2u_base/src/features/account/account_page.dart';
+import 'package:up2u_base/src/features/promotions/promotions_page.dart';
 import 'package:up2u_base/src/features/use_terms/use_terms_page.dart';
+import 'package:up2u_base/src/features/users/users_page.dart';
 
 import '../../shared/components/custom_app_bar_widget.dart';
 import '../../shared/contants/constant_app_images.dart';
@@ -39,22 +41,18 @@ class _ProfilePageState extends State<ProfilePage> {
               if (isAnAdministrator)
                 CustomButton(
                   title: 'Promoções',
-                  onTap: () {
-                    /* Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const FavoritePage())); */
-                  },
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PromotionsPage())),
                 ),
               if (isAnAdministrator)
                 CustomButton(
                   title: 'Usuários',
-                  onTap: () {
-                    /* Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const FavoritePage())); */
-                  },
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const UsersPage())),
                 ),
               if (!isAnAdministrator)
                 CustomButton(

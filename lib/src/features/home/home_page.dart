@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   List<String> estebelishmentItems = [
     'pub',
     'priv',
-    'asfafasf fefeafaf jbkbhkbkbl hvkhvkvvvkvkvk iioihbjlbkjb',
+    'asfafasf fefeafaf',
   ];
 
   String? selectedMusicStyle;
@@ -276,21 +276,47 @@ class _HomePageState extends State<HomePage> {
         PopupMenuItem(
           height: popMenuDropDownHeight,
           enabled: false,
-          child: StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return _bottomDropDown(
-                onChanged: (String? value) {
-                  setState(() {
-                    selectedFevorite = value as String;
-                  });
-                },
-                selectedValue: selectedFevorite,
-                menuItems: favoriteItems,
-                setstate: setState,
-                style: textTheme.bodyText2!.copyWith(
-                    color: const Color(0xFF49494B),
-                    fontWeight: FontWeight.w400));
-          }),
+          child: Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    textStyle: Theme.of(context).textTheme.bodyText1,
+                    fixedSize: const Size.fromHeight(23),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text('Limpar'),
+                ),
+              ),
+              /* Expanded(
+                child: Container(
+                  // width: 74,
+                  height: 23,
+                  color: Colors.brown,
+                ),
+              ), */
+              const SizedBox(width: 10),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    textStyle: Theme.of(context).textTheme.bodyText1,
+                    fixedSize: const Size.fromHeight(23),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text('Aplicar'),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../shared/components/custom_app_bar_widget.dart';
 import '../../shared/components/custom_elevated_button_widget.dart';
+import '../../shared/components/custom_text_form_field_widget.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({Key? key}) : super(key: key);
@@ -20,27 +21,42 @@ class _AccountPageState extends State<AccountPage> {
       body: Stack(
         children: [
           SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 26),
-                _customEditTextFormField(
-                    title: 'Nome', hintText: 'Lorem ipsum Silva'),
-                _customEditTextFormField(
-                    title: 'E-mail', hintText: 'loremipsum@gmail.com'),
-                _customEditTextFormField(
-                    title: 'Telefone', hintText: '(00) 00000-0000'),
-                _customEditTextFormField(
-                    title: 'Senha', hintText: '***********'),
-                if (isAnAdministrator)
-                  _customEditTextFormField(
-                      title: 'CNPJ', hintText: '07070897070'),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  child:
-                      CustomElevatedButton(title: 'Salvar', onPressed: () {}),
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 48),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 26),
+                  //TODO: modificar no widget para receber controller
+                  const CustomTextFormField(
+                      title: 'Nome',
+                      hintText: 'Lorem ipsum Silva',
+                      suffixIcon: Icon(Icons.edit_outlined)),
+                  const CustomTextFormField(
+                      title: 'E-mail',
+                      hintText: 'loremipsum@gmail.com',
+                      suffixIcon: Icon(Icons.edit_outlined)),
+                  const CustomTextFormField(
+                      title: 'Telefone',
+                      hintText: '(00) 00000-0000',
+                      suffixIcon: Icon(Icons.edit_outlined)),
+                  const CustomTextFormField(
+                      title: 'Senha',
+                      hintText: '***********',
+                      suffixIcon: Icon(Icons.edit_outlined)),
+
+                  if (isAnAdministrator)
+                    const CustomTextFormField(
+                        title: 'CNPJ',
+                        hintText: '07070897070',
+                        suffixIcon: Icon(Icons.edit_outlined)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    child:
+                        CustomElevatedButton(title: 'Salvar', onPressed: () {}),
+                  ),
+                ],
+              ),
             ),
           ),
           //TODO: Remover Switch, pois sua finalidade é alternar entre usuário e administrador
@@ -56,6 +72,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   PreferredSizeWidget _appBar() {
+    //TODO: Colocar botão de voltar no topo
     return CustomAppBar(
       bottomRightRadius: 30,
       height: 255,
