@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:up2u_base/src/features/events_details/events_detail_page.dart';
 import 'package:up2u_base/src/features/profile/profile_page.dart';
 
 import '../../shared/components/custom_app_bar_widget.dart';
@@ -77,15 +78,24 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: _appBar(),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 16),
+        padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
               Container(),
-              EventsWidget(),
-              EventsWidget(),
-              EventsWidget(),
+              EventsWidget(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EventsDetailPage())),
+              ),
+              EventsWidget(
+                onTap: () {},
+              ),
+              EventsWidget(
+                onTap: () {},
+              ),
             ]),
       ),
     );

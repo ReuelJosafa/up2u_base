@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:up2u_base/src/features/use_terms/use_terms_page.dart';
 
+import '../../shared/components/custom_checkbox_widget.dart';
 import '../../shared/components/custom_elevated_button_widget.dart';
 import '../../shared/contants/constant_app_images.dart';
 
@@ -17,7 +18,8 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-body: Stack(alignment: AlignmentDirectional.center,
+      body: Stack(
+        alignment: AlignmentDirectional.center,
         children: [
           Image.asset(ConstantAppImages.background, height: 352),
           SingleChildScrollView(
@@ -55,12 +57,11 @@ body: Stack(alignment: AlignmentDirectional.center,
     );
   }
 
-  Widget retornaWidget(){
+  Widget retornaWidget() {
     return Container(
       height: 12,
       width: 12,
       color: Colors.red,
-
     );
   }
 
@@ -89,16 +90,9 @@ body: Stack(alignment: AlignmentDirectional.center,
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Transform.scale(
-          scale: 1.5,
-          child: Checkbox(
-            side: BorderSide(width: 1, color: Theme.of(context).primaryColor),
-            checkColor: Theme.of(context).colorScheme.secondary,
-            value: _checkbox,
-            onChanged: (value) {},
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          ),
+        CustomCheckbox(
+          value: _checkbox,
+          onChanged: (value) {},
         ),
         const SizedBox(width: 14),
         Text('Aceitar os',

@@ -24,9 +24,15 @@ class _FavoritePageState extends State<FavoritePage> {
             children: [
               //TODO: verificar alinhamnento
               Container(),
-              EventsWidget(),
-              EventsWidget(),
-              EventsWidget(),
+              EventsWidget(
+                onTap: () {},
+              ),
+              EventsWidget(
+                onTap: () {},
+              ),
+              EventsWidget(
+                onTap: () {},
+              ),
             ]),
       ),
     );

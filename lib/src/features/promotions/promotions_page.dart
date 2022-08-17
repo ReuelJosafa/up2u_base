@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:up2u_base/src/shared/components/custom_app_bar_widget.dart';
 
+import '../../shared/components/custom_container_action_widget.dart';
 import '../../shared/components/custom_expansion_tile_wiget.dart';
 import '../../shared/components/custom_text_form_field_widget.dart';
 
@@ -63,116 +64,19 @@ class _PromotionsPageState extends State<PromotionsPage> {
                   ),
                 ],
               ),
-              /* _customAnimatedContainer(
-                  expanded: isExpanded,
-                  onExpanded: () {
-                    setState(() {
-                      isExpanded = !isExpanded;
-                    });
-                  }), */
-              _customContainerActions(),
+              CustomContainerAction(
+                  title: 'Promoção 1',
+                  subtitle: '27/02 dás 19h á 02h',
+                  thirdtitle: 'Ativado',
+                  trailing: Switch(value: true, onChanged: (value) {})),
+              CustomContainerAction(
+                  title: 'Promoção 1',
+                  subtitle: '27/02 dás 19h á 02h',
+                  thirdtitle: 'Ativado',
+                  trailing: Switch(value: true, onChanged: (value) {})),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-/*   Widget _customAnimatedContainer(
-      {bool expanded = false, void Function()? onExpanded}) {
-    return AnimatedContainer(
-      height: expanded ? 230 : 60,
-      curve: Curves.easeInOut,
-      duration: const Duration(seconds: 1),
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Theme.of(context).primaryColor),
-      ),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: onExpanded,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Adicionar Promoção',
-                    maxLines: 2,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline5!
-                        .copyWith(fontWeight: FontWeight.w600),
-                  ),
-                  Icon(expanded
-                      ? Icons.arrow_drop_up
-                      : Icons.arrow_drop_down_sharp)
-                ],
-              ),
-            ),
-          ),
-          if (expanded)
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 180,
-                      width: 50,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              ),
-            )
-        ],
-      ),
-    );
-  } */
-
-  Widget _customContainerActions() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Theme.of(context).colorScheme.secondary,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Promoção 1',
-                  maxLines: 2,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline2!
-                      .copyWith(fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '27/02 dás 19h á 02h',
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Ativado',
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-                const SizedBox(height: 4),
-              ],
-            ),
-          ),
-          Switch(value: true, onChanged: (value) {})
-        ],
       ),
     );
   }
