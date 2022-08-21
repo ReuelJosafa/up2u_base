@@ -74,12 +74,10 @@ class _UseTermsPageState extends State<UseTermsPage> {
               .copyWith(fontWeight: FontWeight.w600)),
       centerTitle: true,
       elevation: 0,
-      bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(4),
-          child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 26),
-              color: Colors.white,
-              height: 1)),
+      bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(4),
+          child: Divider(
+              thickness: 1, color: Colors.white, endIndent: 26, indent: 26)),
     );
   }
 }

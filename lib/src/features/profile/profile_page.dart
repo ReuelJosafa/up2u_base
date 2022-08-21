@@ -4,6 +4,7 @@ import 'package:up2u_base/src/features/promotions/promotions_page.dart';
 import 'package:up2u_base/src/features/use_terms/use_terms_page.dart';
 import 'package:up2u_base/src/features/users/users_page.dart';
 
+import '../../shared/components/alert_dialog_action_button_widget.dart';
 import '../../shared/components/custom_app_bar_widget.dart';
 import '../../shared/contants/constant_app_images.dart';
 import '../favorite/favorite_page.dart';
@@ -170,43 +171,15 @@ class _ProfilePageState extends State<ProfilePage> {
             actionsOverflowAlignment: OverflowBarAlignment.center,
             actionsAlignment: MainAxisAlignment.center,
             actions: [
-              _actionButton(
+              AlertDialogActionButton(
                   onPressed: () => Navigator.pop(context),
                   title: 'Voltar',
                   outlineBorder: true),
               const SizedBox(width: 8),
-              _actionButton(onPressed: () {}, title: 'Sair', filled: true),
+              AlertDialogActionButton(
+                  onPressed: () {}, title: 'Sair', filled: true),
             ],
           );
         }));
-  }
-
-  Widget _actionButton(
-      {required void Function()? onPressed,
-      required String title,
-      bool filled = false,
-      bool outlineBorder = false}) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-            fixedSize: const Size(118, 37),
-            backgroundColor: filled
-                ? Theme.of(context).buttonTheme.colorScheme!.background
-                : null,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            side: outlineBorder
-                ? BorderSide(
-                    color: Theme.of(context).buttonTheme.colorScheme!.outline,
-                    width: 1)
-                : null),
-        child: Text(title,
-            style: textTheme.headline4!.copyWith(
-                color: filled
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).buttonTheme.colorScheme!.outline,
-                fontWeight: FontWeight.w300)));
   }
 }

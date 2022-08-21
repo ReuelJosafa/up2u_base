@@ -4,8 +4,19 @@ class CustomTextFormField extends StatelessWidget {
   final String title;
   final String hintText;
   final Icon? suffixIcon;
+  final TextStyle? titleStyle;
+  final TextStyle? inputStyle;
+  final TextStyle? hintStyle;
+  final Color? underlineColor;
   const CustomTextFormField(
-      {Key? key, required this.title, required this.hintText, this.suffixIcon})
+      {Key? key,
+      required this.title,
+      required this.hintText,
+      this.suffixIcon,
+      this.titleStyle,
+      this.inputStyle,
+      this.underlineColor,
+      this.hintStyle})
       : super(key: key);
 
   @override
@@ -17,18 +28,21 @@ class CustomTextFormField extends StatelessWidget {
         children: [
           Text(
             title,
-            style: Theme.of(context)
-                .textTheme
-                .headline4!
-                .copyWith(fontWeight: FontWeight.w500),
+            style: titleStyle ??
+                Theme.of(context)
+                    .textTheme
+                    .headline4!
+                    .copyWith(fontWeight: FontWeight.w500),
           ),
           TextFormField(
-            style: Theme.of(context).textTheme.bodyText1,
+            style: inputStyle ?? Theme.of(context).textTheme.bodyText1,
             decoration: InputDecoration(
+                hintStyle: hintStyle,
                 hintText: hintText,
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.onSecondary,
+                        color: underlineColor ??
+                            Theme.of(context).colorScheme.onSecondary,
                         width: 1)),
                 suffixIcon: suffixIcon),
           ),

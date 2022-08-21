@@ -31,22 +31,35 @@ class MyApp extends StatelessWidget {
       dividerColor: Colors.transparent,
       toggleableActiveColor: const Color(0xFFD3A62A),
       splashColor: const Color(0xFF4C3513),
-      buttonTheme: const ButtonThemeData(
-          buttonColor: Color(0xFFFBBC05),
+      buttonTheme: ButtonThemeData(
+          buttonColor: const Color(0xFFFBBC05),
           colorScheme: ColorScheme.dark(
-            outline: Color(0xFFFBBC05),
-            background: Color(0xFFFBBC05),
+            secondary: const Color(0xFFFBBC05).withOpacity(0.17),
+            outline: const Color(0xFFFBBC05),
+            background: const Color(0xFFFBBC05),
           )),
-      // accentColor: shrineBrown900,
+      dialogTheme: const DialogTheme(
+        backgroundColor: Colors.white,
+        titleTextStyle: TextStyle(
+            color: Color(0xFF0D0D0D),
+            fontWeight: FontWeight.w600,
+            fontSize: 14.0),
+        contentTextStyle: TextStyle(
+            color: Color(0xFF0D0D0D),
+            fontWeight: FontWeight.w500,
+            fontSize: 12.0),
+      ),
       primaryColor: const Color(0xFFD3A62A),
-      // cardColor: shrineBackgroundWhite,
-      // textSelectionColor: shrinePink100,
-      // errorColor: shrineErrorRed,
-      // primaryIconTheme: _customIconTheme(base.iconTheme),
+      scrollbarTheme: ScrollbarThemeData(
+        interactive: true,
+        crossAxisMargin: -3,
+        mainAxisMargin: 16,
+        thickness: MaterialStateProperty.all(8),
+        thumbColor: MaterialStateProperty.all(const Color(0xFFD3A62A)),
+        trackColor: MaterialStateProperty.all(const Color(0xFFEBECEE)),
+      ),
       textTheme: _textTheme(base.textTheme),
       primaryTextTheme: _textTheme(base.primaryTextTheme),
-      // accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
-      // iconTheme: _customIconTheme(base.iconTheme),
     );
   }
 

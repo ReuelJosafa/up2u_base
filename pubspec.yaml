@@ -64,6 +64,9 @@ flutter:
     - images/LogoUP2U-NEGATIVOEDB-fundo.png
     - images/rectangle8.jpg
     - images/profile_picture.jpeg
+    - images/party1.jpg
+    - images/party2.jpg
+    - images/party3.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

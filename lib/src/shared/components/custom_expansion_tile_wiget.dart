@@ -16,6 +16,8 @@ class CustomExpansionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    children.length;
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/components/custom_app_bar_widget.dart';
-import '../../shared/components/custom_checkbox_widget.dart';
+import '../../shared/components/commom_app_bar_widget.dart';
+import '../../shared/components/custom_checkbox_tile_widget.dart';
 import '../../shared/components/custom_container_action_widget.dart';
 import '../../shared/components/custom_expansion_tile_wiget.dart';
 import '../../shared/components/custom_text_form_field_widget.dart';
@@ -19,7 +19,11 @@ class _UsersPageState extends State<UsersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appBar(),
+      appBar: const CommomAppBar(
+        title: 'Usuários',
+        subtitle:
+            'Adicione ou modifique o nivel de acesso dos seus funcionarios',
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -49,12 +53,14 @@ class _UsersPageState extends State<UsersPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildCheckboxTile(
+                          CustomCheckboxTile(
                             title: 'Card',
+                            value: false,
                             onChanged: (value) {},
                           ),
-                          _buildCheckboxTile(
+                          CustomCheckboxTile(
                             title: 'Listas',
+                            value: false,
                             onChanged: (value) {},
                           ),
                         ],
@@ -62,12 +68,14 @@ class _UsersPageState extends State<UsersPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildCheckboxTile(
+                          CustomCheckboxTile(
                             title: 'Cardapio',
+                            value: false,
                             onChanged: (value) {},
                           ),
-                          _buildCheckboxTile(
+                          CustomCheckboxTile(
                             title: 'Edição de usuarios',
+                            value: false,
                             onChanged: (value) {},
                           ),
                         ],
@@ -109,67 +117,6 @@ class _UsersPageState extends State<UsersPage> {
           ),
         ),
       ),
-    );
-  }
-
-  PreferredSizeWidget _appBar() {
-    return CustomAppBar(
-      bottomRightRadius: 30,
-      height: 130,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16),
-        child: SafeArea(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(Icons.arrow_back_ios_new_outlined),
-                    ),
-                    const SizedBox(width: 32),
-                    Text(
-                      'Usuários',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2!
-                          .copyWith(fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.only(left: 56),
-                  child: Text(
-                    'Adicione ou modifique o nivel de acesso dos seus funcionarios',
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                ),
-              ]),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCheckboxTile(
-      {required String title, required void Function(bool?)? onChanged}) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CustomCheckbox(
-          value: true,
-          onChanged: onChanged,
-        ),
-        Text(
-          title,
-          style: Theme.of(context).textTheme.bodyText1,
-        )
-      ],
     );
   }
 }

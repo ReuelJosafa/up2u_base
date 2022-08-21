@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:up2u_base/src/shared/components/text_underlined_button_widget.dart';
 
+import '../edit_menu/edit_menu_page.dart';
+
 class MenuSubpage extends StatefulWidget {
   const MenuSubpage({Key? key}) : super(key: key);
 
@@ -12,7 +14,7 @@ class _MenuSubpageState extends State<MenuSubpage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 32, right: 2, left: 2),
+      padding: const EdgeInsets.only(top: 32, right: 2, left: 2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -21,7 +23,7 @@ class _MenuSubpageState extends State<MenuSubpage> {
             runSpacing: 8,
             alignment: WrapAlignment.center,
             children: [
-              for (int x = 0; x < 12; x++) _buildCustomCard(),
+              for (int x = 0; x < 6; x++) _buildCustomCard(),
             ],
           ),
           const SizedBox(height: 32),
@@ -29,7 +31,12 @@ class _MenuSubpageState extends State<MenuSubpage> {
             alignment: Alignment.centerRight,
             child: Padding(
               padding: const EdgeInsets.only(right: 18),
-              child: TextUnderlinedButton(onTap: () {}, title: 'Editar Cardápio'),
+              child: TextUnderlinedButton(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const EditMenuPage())),
+                  title: 'Editar Cardápio'),
             ),
           ),
           const SizedBox(height: 32),
@@ -52,22 +59,21 @@ class _MenuSubpageState extends State<MenuSubpage> {
 
   Widget _buildCustomCard() {
     return Card(
-      elevation: 5,
+      elevation: 10,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       // margin: EdgeInsets.all(6),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         height: 110,
         width: 116,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              height: 47,
-              width: 47,
-              color: Colors.white,
+            const Icon(
+              Icons.food_bank_outlined,
+              size: 47,
             ),
             Text(
               'Lorems',

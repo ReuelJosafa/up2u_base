@@ -6,6 +6,8 @@ import 'package:up2u_base/src/features/profile/profile_page.dart';
 import '../../shared/components/custom_app_bar_widget.dart';
 import '../../shared/components/custom_outline_input_text_widget.dart';
 import '../../shared/components/events_widget.dart';
+import '../../shared/components/text_underlined_button_widget.dart';
+import 'components/custom_dropdown_button_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,6 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
   final PageController controller = PageController();
+  bool isAnAdministrator = true;
 
   String? selectedEstabelishment;
   List<String> estebelishmentItems = [
@@ -67,36 +70,70 @@ class _HomePageState extends State<HomePage> {
         controller: controller,
         children: [
           _homePage(),
-          ProfilePage(),
+          const ProfilePage(),
         ],
       ),
-      bottomNavigationBar: _bottomNavBar(),
+      bottomNavigationBar: _buildBottomNavBar(),
     );
   }
 
   Widget _homePage() {
     return Scaffold(
       appBar: _appBar(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(),
-              EventsWidget(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const EventsDetailPage())),
-              ),
-              EventsWidget(
-                onTap: () {},
-              ),
-              EventsWidget(
-                onTap: () {},
-              ),
-            ]),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const SizedBox(width: double.maxFinite),
+                  if (isAnAdministrator)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 28, top: 14),
+                        child: Text(
+                          'Meus Estabelecimentos',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline3!
+                              .copyWith(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                  EventsWidget(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EventsDetailPage())),
+                  ),
+                  EventsWidget(
+                    onTap: () {},
+                  ),
+                  EventsWidget(
+                    onTap: () {},
+                  ),
+                  if (isAnAdministrator)
+                    TextUnderlinedButton(
+                      onTap: () {},
+                      title: 'Adicione mais um estabelecimento',
+                      style: Theme.of(context).textTheme.headline4!.copyWith(
+                          decoration: TextDecoration.underline,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                  const SizedBox(height: 24)
+                ]),
+          ),
+          //TODO: Remover Switch, pois sua finalidade é alternar entre usuário e administrador
+
+          Switch(
+              value: isAnAdministrator,
+              onChanged: ((value) => setState(() {
+                    isAnAdministrator = value;
+                  }))),
+        ],
       ),
     );
   }
@@ -105,15 +142,15 @@ class _HomePageState extends State<HomePage> {
     return CustomAppBar(
       bottomLeftRadius: 18,
       bottomRightRadius: 18,
-      height: 226,
+      height: isAnAdministrator ? 146 : 226,
       child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 30),
+        padding: const EdgeInsets.only(left: 16, right: 16),
         child: SafeArea(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 24),
+                const SizedBox(height: 4),
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 2),
                   //TODO: substituir por imagem do usuário
@@ -123,6 +160,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   title: Text(
                     'Bem-vindo, Fulado de Tal',
+                    maxLines: 2,
                     style: Theme.of(context)
                         .textTheme
                         .headline2!
@@ -142,23 +180,24 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      //TODO: Adicionar ações de input
-                      const Expanded(
-                        child: CustomOutlineInputText(),
-                      ),
-                      _filterPopUpMenu(icon: Icons.filter_list_alt)
-                      /*  IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.filter_list_alt)) */
-                    ],
-                  ),
-                ),
+                if (!isAnAdministrator) _buildSearchWidgets()
               ]),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSearchWidgets() {
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          //TODO: Adicionar ações de input
+          const Expanded(
+            child: CustomOutlineInputText(),
+          ),
+          _filterPopUpMenu(icon: Icons.filter_list_alt)
+        ],
       ),
     );
   }
@@ -189,7 +228,7 @@ class _HomePageState extends State<HomePage> {
           enabled: false,
           child: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-            return _bottomDropDown(
+            return CustomDropdownButton(
                 onChanged: (String? value) {
                   setState(() {
                     selectedEstabelishment = value as String;
@@ -209,7 +248,7 @@ class _HomePageState extends State<HomePage> {
           enabled: false,
           child: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-            return _bottomDropDown(
+            return CustomDropdownButton(
                 onChanged: (String? value) {
                   setState(() {
                     selectedMusicStyle = value as String;
@@ -229,7 +268,7 @@ class _HomePageState extends State<HomePage> {
           enabled: false,
           child: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-            return _bottomDropDown(
+            return CustomDropdownButton(
                 onChanged: (String? value) {
                   setState(() {
                     selectedMusic = value as String;
@@ -249,7 +288,7 @@ class _HomePageState extends State<HomePage> {
           enabled: false,
           child: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-            return _bottomDropDown(
+            return CustomDropdownButton(
                 onChanged: (String? value) {
                   setState(() {
                     selectedEntrance = value as String;
@@ -269,7 +308,7 @@ class _HomePageState extends State<HomePage> {
           enabled: false,
           child: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
-            return _bottomDropDown(
+            return CustomDropdownButton(
                 onChanged: (String? value) {
                   setState(() {
                     selectedFevorite = value as String;
@@ -289,46 +328,32 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    textStyle: Theme.of(context).textTheme.bodyText1,
-                    fixedSize: const Size.fromHeight(23),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Limpar'),
-                ),
-              ),
-              /* Expanded(
-                child: Container(
-                  // width: 74,
-                  height: 23,
-                  color: Colors.brown,
-                ),
-              ), */
+              _commomSearchButton(onPressed: () {}, title: 'Limpar'),
               const SizedBox(width: 10),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    textStyle: Theme.of(context).textTheme.bodyText1,
-                    fixedSize: const Size.fromHeight(23),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Aplicar'),
-                ),
-              ),
+              _commomSearchButton(onPressed: () {}, title: 'Aplicar'),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _commomSearchButton(
+      {required void Function()? onPressed, required String title}) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          primary: Theme.of(context).colorScheme.secondary,
+          elevation: 0,
+          textStyle: Theme.of(context).textTheme.bodyText1,
+          fixedSize: const Size.fromHeight(23),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: Text(title),
+      ),
     );
   }
 
@@ -347,7 +372,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _bottomDropDown(
+  /* Widget CustomDropdownButtonV(
       {required TextStyle style,
       required void Function(void Function()) setstate,
       required List<String> menuItems,
@@ -358,7 +383,8 @@ class _HomePageState extends State<HomePage> {
         iconEnabledColor: const Color(0xFF0D0D0D),
         dropdownDecoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(10)),
-        selectedItemHighlightColor: Colors.amber,
+        selectedItemHighlightColor:
+            Theme.of(context).primaryColor.withOpacity(0.5),
         style: style,
         buttonDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -385,9 +411,9 @@ class _HomePageState extends State<HomePage> {
             .toList(),
       ),
     );
-  }
+  } */
 
-  Widget _bottomNavBar() {
+  Widget _buildBottomNavBar() {
     final colorScheme = Theme.of(context).colorScheme;
 
     return BottomNavigationBar(

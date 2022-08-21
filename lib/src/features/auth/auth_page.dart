@@ -95,14 +95,14 @@ class _AuthPageState extends State<AuthPage> {
                       fontWeight: FontWeight.w500),
                 )),
             const SizedBox(height: 20),
-            _socialMidiasButtonV2(
+            _socialMidiasButton(
                 icon: Icons.email_outlined,
                 text: 'Efetuar login com o Gmail',
                 onTap: () {}),
-            _socialMidiasButtonV2(
+            _socialMidiasButton(
                 icon: Icons.facebook_outlined,
                 text: 'Efetuar login com o Facebook'),
-            _socialMidiasButtonV2(
+            _socialMidiasButton(
                 icon: Icons.whatsapp,
                 text: 'Cadastre seu estabelecimento',
                 color: Theme.of(context).primaryColor),
@@ -148,7 +148,7 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  Widget _socialMidiasButtonV2(
+  Widget _socialMidiasButton(
       {required IconData icon,
       required String text,
       Color? color,
@@ -177,31 +177,5 @@ class _AuthPageState extends State<AuthPage> {
             ),
           ),
         ));
-  }
-
-  Widget _socialMidiasButton(
-      {required IconData icon,
-      required String text,
-      Color? color,
-      void Function()? onPressed}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 22),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color),
-          const SizedBox(width: 8),
-          Text(
-            text,
-            style: Theme.of(context).textTheme.headline3!.copyWith(
-                decoration: TextDecoration.underline,
-                fontWeight: FontWeight.w400,
-                color: color,
-                overflow: TextOverflow.ellipsis),
-          ),
-        ],
-      ),
-    );
   }
 }
