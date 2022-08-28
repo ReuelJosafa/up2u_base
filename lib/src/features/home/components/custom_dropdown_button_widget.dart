@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 
 class CustomDropdownButton extends StatelessWidget {
   final TextStyle style;
-  final void Function(void Function()) setstate;
   final List<String> menuItems;
   final String? selectedValue;
   final Function(String?)? onChanged;
   const CustomDropdownButton(
       {Key? key,
       required this.style,
-      required this.setstate,
       required this.menuItems,
       this.selectedValue,
       this.onChanged})

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CustomExpansionTile extends StatelessWidget {
   final String title;
   final bool isExpanded;
+  final bool inverseTrailing;
   final void Function(bool)? onExpansionChanged;
   final List<Widget> children;
 
@@ -11,12 +12,18 @@ class CustomExpansionTile extends StatelessWidget {
       required this.title,
       this.isExpanded = false,
       this.onExpansionChanged,
-      this.children = const <Widget>[]})
+      this.children = const <Widget>[],
+      this.inverseTrailing = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    children.length;
+    IconData _trailing() {
+      if (inverseTrailing) {
+        return isExpanded ? Icons.arrow_drop_down_sharp : Icons.arrow_drop_up;
+      }
+      return isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down_sharp;
+    }
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -35,9 +42,7 @@ class CustomExpansionTile extends StatelessWidget {
         ),
         childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
         initiallyExpanded: isExpanded,
-        trailing: Icon(
-            isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down_sharp,
-            color: Colors.white),
+        trailing: Icon(_trailing(), color: Colors.white),
         expandedAlignment: Alignment.centerLeft,
         onExpansionChanged: onExpansionChanged,
         children: children,

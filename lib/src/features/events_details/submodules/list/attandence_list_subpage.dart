@@ -13,38 +13,42 @@ class AttandenceListSubpage extends StatefulWidget {
 class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      itemCount: 30,
-      itemBuilder: (context, index) {
-        return _buildAttandanceListTile(
-            name: 'lorem ipsum Exemplo',
-            isPresent: index != 1,
-            showData: index == 0,
-            onTap: _editPreseceAlertDialog);
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 22, bottom: 16, top: 28),
+          child: Text(
+            '15/06',
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1!
+                .copyWith(fontWeight: FontWeight.w300),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            
+            shrinkWrap: true,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            itemCount: 30,
+            itemBuilder: (context, index) {
+              return _buildAttandanceListTile(
+                  name: 'lorem ipsum Exemplo',
+                  isPresent: index != 1,
+                  onTap: _editPreseceAlertDialog);
+            },
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildAttandanceListTile(
-      {required String name,
-      required bool isPresent,
-      required bool showData,
-      void Function()? onTap}) {
+      {required String name, required bool isPresent, void Function()? onTap}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (showData)
-          Padding(
-            padding: const EdgeInsets.only(left: 15, bottom: 16, top: 28),
-            child: Text(
-              '15/06',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1!
-                  .copyWith(fontWeight: FontWeight.w300),
-            ),
-          ),
         ListTile(
           onTap: onTap,
           title: Text(

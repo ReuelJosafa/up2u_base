@@ -15,61 +15,50 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appBar(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 16),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              //TODO: verificar alinhamnento
-              Container(),
-              EventsWidget(
-                onTap: () {},
-              ),
-              EventsWidget(
-                onTap: () {},
-              ),
-              EventsWidget(
-                onTap: () {},
-              ),
-            ]),
-      ),
+      appBar: _buildAppBar(),
+      body: ListView.builder(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return EventsWidget(
+              favorite: true,
+              onTap: () {},
+            );
+          }),
     );
   }
 
-  PreferredSizeWidget _appBar() {
+  PreferredSizeWidget _buildAppBar() {
     return CustomAppBar(
       bottomRightRadius: 30,
-      height: 171,
+      height: 151,
       child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 30),
+        padding: const EdgeInsets.only(left: 16, right: 16,),
         child: SafeArea(
           child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(height: 18),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(Icons.arrow_back_ios_new_outlined),
-                    ),
-                    const SizedBox(width: 16),
-                    Text(
-                      'Favoritos',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2!
-                          .copyWith(fontWeight: FontWeight.w500),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: const Icon(Icons.arrow_back_ios_new_outlined),
+                      ),
+                      const SizedBox(width: 16),
+                      Text(
+                        'Favoritos',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline2!
+                            .copyWith(fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.only(left: 18, top: 22),
+                  padding: EdgeInsets.only(left: 18, bottom: 16, right: 8),
                   child: CustomOutlineInputText(),
                 )
               ]),

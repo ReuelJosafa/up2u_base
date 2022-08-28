@@ -1,9 +1,15 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../shared/components/custom_elevated_button_widget.dart';
-import '../../shared/contants/constant_app_images.dart';
+import '../../shared/constants/constant_app_images.dart';
+import '../../shared/utils/components_utils.dart';
 import '../home/home_page.dart';
 import '../register/register_page.dart';
+import 'components/social_midia_button_widget.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -13,7 +19,49 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final passwordFocus = FocusNode();
+  bool _showPassword = true;
   bool _rememberMe = false;
+
+  void _changeSwitchRemember(bool value) {
+    setState(() {
+      _rememberMe = !_rememberMe;
+    });
+  }
+
+  void _changePasswordVisibily() {
+    setState(() {
+      _showPassword = !_showPassword;
+    });
+  }
+
+  void _forgetPassword() {}
+
+  void _login() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => HomePage(
+                isAnAdministrator: _rememberMe,
+              )),
+    );
+  }
+
+  void _loginWithGmail() {}
+
+  void _loginWithFacebook() {}
+
+  void _navigateToRegister() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const RegisterPage()),
+    );
+  }
+
+  void _registerEstabelishment() {}
 
   @override
   Widget build(BuildContext context) {
@@ -27,39 +75,60 @@ class _AuthPageState extends State<AuthPage> {
           children: [
             const SizedBox(height: 8),
             Image.asset(ConstantAppImages.logo, height: 218),
-            TextField(
-              style: Theme.of(context).textTheme.headline3,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.person),
-                hintText: 'E-mail',
-              ),
-            ),
-            const SizedBox(height: 22),
-            TextField(
-              style: Theme.of(context).textTheme.headline3,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.lock_outlined),
-                suffixIcon: Icon(Icons.visibility_off_outlined),
-                hintText: 'Senha',
-              ),
-            ),
+            Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: emailController,
+                      style: Theme.of(context).textTheme.headline3,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).requestFocus(passwordFocus),
+                      decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
+                                width: 1)),
+                        prefixIcon: SvgPicture.asset(ConstantAppImages.person,
+                            fit: BoxFit.none),
+                        hintText: 'E-mail',
+                      ),
+                    ),
+                    const SizedBox(height: 22),
+                    TextFormField(
+                      controller: passwordController,
+                      style: Theme.of(context).textTheme.headline3,
+                      obscureText: _showPassword,
+                      keyboardType: TextInputType.visiblePassword,
+                      focusNode: passwordFocus,
+                      textInputAction: TextInputAction.done,
+                      decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
+                                width: 1)),
+                        prefixIcon: SvgPicture.asset(ConstantAppImages.lock,
+                            fit: BoxFit.none),
+                        suffixIcon: IconButton(
+                            onPressed: _changePasswordVisibily,
+                            icon: Icon(_showPassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility)),
+                        hintText: 'Senha',
+                      ),
+                    ),
+                  ],
+                )),
             const SizedBox(height: 22),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 4),
-                child: Row(children: [
-                  Switch(
-                      value: _rememberMe,
-                      onChanged: (value) {
-                        setState(() {
-                          _rememberMe = !_rememberMe;
-                        });
-                      }),
-                  Text('Lembre-me', style: Theme.of(context).textTheme.caption)
-                ]),
-              ),
-              GestureDetector(
-                onTap: () {},
+              _buildSwitchTile(
+                  value: _rememberMe, onChanged: _changeSwitchRemember),
+              InkWell(
+                onTap: _forgetPassword,
                 child: Text('Esqueceu a senha?',
                     style: Theme.of(context)
                         .textTheme
@@ -68,26 +137,13 @@ class _AuthPageState extends State<AuthPage> {
               )
             ]),
             const SizedBox(height: 16),
-            // teste(),
-            const SizedBox(height: 16),
             CustomElevatedButton(
               title: 'Efetuar login',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-              },
+              onPressed: _login,
             ),
             const SizedBox(height: 20),
             TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RegisterPage()),
-                  );
-                },
+                onPressed: _navigateToRegister,
                 child: Text(
                   'Cadastrar',
                   style: Theme.of(context).textTheme.headline3!.copyWith(
@@ -95,87 +151,36 @@ class _AuthPageState extends State<AuthPage> {
                       fontWeight: FontWeight.w500),
                 )),
             const SizedBox(height: 20),
-            _socialMidiasButton(
-                icon: Icons.email_outlined,
+            SocialMidiaButton(
+                icon: SvgPicture.asset(ConstantAppImages.google),
                 text: 'Efetuar login com o Gmail',
-                onTap: () {}),
-            _socialMidiasButton(
-                icon: Icons.facebook_outlined,
-                text: 'Efetuar login com o Facebook'),
-            _socialMidiasButton(
-                icon: Icons.whatsapp,
+                onTap: _loginWithGmail),
+            SocialMidiaButton(
+                icon: SvgPicture.asset(ConstantAppImages.facebook),
+                text: 'Efetuar login com o Facebook',
+                onTap: _loginWithFacebook),
+            SocialMidiaButton(
+                icon:
+                    Icon(Icons.whatsapp, color: Theme.of(context).primaryColor),
                 text: 'Cadastre seu estabelecimento',
-                color: Theme.of(context).primaryColor),
+                color: Theme.of(context).primaryColor,
+                textSameColor: true,
+                onTap: _registerEstabelishment),
           ],
         ),
       ),
     );
   }
 
-  Widget teste() {
-    return Text.rich(
-      // overflow: TextOverflow.ellipsis,
-      maxLines: 2,
-      textAlign: TextAlign.end,
-      TextSpan(
-        /* style: Theme.of(context)
-                  .textTheme
-                  .headline3!
-                  .copyWith(fontWeight: FontWeight.w400, color: color), */
-        children: [
-          WidgetSpan(
-              child: Switch(
-                  value: _rememberMe,
-                  onChanged: (value) {
-                    setState(() {
-                      _rememberMe = !_rememberMe;
-                    });
-                  })),
-          TextSpan(
-              text: 'Lembre-me', style: Theme.of(context).textTheme.caption),
-          const WidgetSpan(child: SizedBox(width: 8, height: 8)),
-          WidgetSpan(
-              child: GestureDetector(
-            onTap: () {},
-            child: Text('Esqueceu a senha?',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline4!
-                    .copyWith(decoration: TextDecoration.underline)),
-          ))
-        ],
-      ),
-    );
-  }
-
-  Widget _socialMidiasButton(
-      {required IconData icon,
-      required String text,
-      Color? color,
-      void Function()? onTap}) {
+  Widget _buildSwitchTile(
+      {required bool value, required void Function(bool)? onChanged}) {
     return Padding(
-        padding: const EdgeInsets.only(bottom: 22),
-        child: GestureDetector(
-          onTap: onTap,
-          child: Text.rich(
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            textAlign: TextAlign.center,
-            TextSpan(
-              style: Theme.of(context)
-                  .textTheme
-                  .headline3!
-                  .copyWith(fontWeight: FontWeight.w400, color: color),
-              children: [
-                WidgetSpan(child: Icon(icon)),
-                const WidgetSpan(child: SizedBox(width: 8, height: 8)),
-                TextSpan(
-                    text: text,
-                    style:
-                        const TextStyle(decoration: TextDecoration.underline))
-              ],
-            ),
-          ),
-        ));
+      padding: const EdgeInsets.only(right: 4),
+      child: Row(children: [
+        ComponentsUtils.buildSwitch(context,
+            value: value, onChanged: onChanged),
+        Text('Lembre-me', style: Theme.of(context).textTheme.caption)
+      ]),
+    );
   }
 }

@@ -29,12 +29,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   dropdown_button2: ^1.7.2
+  convex_bottom_bar: ^3.0.0
+  flutter_svg: ^1.1.4
+  mask_text_input_formatter: ^2.4.0
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -64,10 +70,39 @@ flutter:
     - images/LogoUP2U-NEGATIVOEDB-fundo.png
     - images/rectangle8.jpg
     - images/profile_picture.jpeg
+    - images/party_logo.png
     - images/party1.jpg
     - images/party2.jpg
     - images/party3.jpg
-
+    - images/camera.svg
+    - images/credit_card_banner.png
+    - images/credit_card.svg
+    - images/custom_credit_card.png
+    - images/debit_card.png
+    - images/delete_alt.svg
+    - images/delete.svg
+    - images/edit_alt.svg
+    - images/edit_photo.svg
+    - images/facebook.svg
+    - images/filter_alt.svg
+    - images/google.svg
+    - images/heart_filled.svg
+    - images/heart.svg
+    - images/home.svg
+    - images/locale.svg
+    - images/lock.svg
+    - images/meal_ticket.png
+    - images/megaphone.png
+    - images/menu_1.png
+    - images/menu_2.png
+    - images/menu_3.png
+    - images/menu_4.png
+    - images/menu_5.png
+    - images/menu_6.png
+    - images/person.svg
+    - images/picpay.png
+    - images/pix.png
+    - images/user.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

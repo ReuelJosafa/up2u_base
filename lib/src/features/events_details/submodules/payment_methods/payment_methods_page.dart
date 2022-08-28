@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 
-import '../../shared/components/custom_checkbox_tile_widget.dart';
-import '../../shared/components/text_underlined_button_widget.dart';
-import '../../shared/contants/constant_app_images.dart';
+import '../../../../shared/components/custom_checkbox_tile_widget.dart';
+import '../../../../shared/components/text_underlined_button_widget.dart';
+import '../../../../shared/constants/constant_app_images.dart';
 import 'components/expanded_section_widget.dart';
 
 class PaymentMethodsPage extends StatefulWidget {
-  const PaymentMethodsPage({Key? key}) : super(key: key);
+  final bool isAnAdministrator;
+  const PaymentMethodsPage({Key? key, required this.isAnAdministrator})
+      : super(key: key);
 
   @override
   State<PaymentMethodsPage> createState() => _PaymentMethodsPageState();
 }
 
 class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
-  bool isExpanded = false;
+  bool _isExpanded = false;
   bool isExpandedDebito = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () {
-              Navigator.pop(context);
-            }),
+            onPressed: () => Navigator.pop(context)),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
       ),
@@ -44,15 +45,21 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                           .headline1!
                           .copyWith(fontWeight: FontWeight.w500)),
                   const Divider(thickness: 1, color: Colors.white),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 22),
                   _expansionTile(
                       title: 'Cartão de Credito',
-                      icon: Icons.credit_card,
-                      subtitle: const Text('Bandeiras'),
-                      editable: true,
-                      expanded: isExpanded,
+                      icon: Image.asset(ConstantAppImages.customCreditCard,
+                          fit: BoxFit.contain),
+                      subtitle: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Image.asset(
+                              height: 20,
+                              ConstantAppImages.creditCardBanner,
+                              fit: BoxFit.scaleDown)),
+                      editable: widget.isAnAdministrator,
+                      expanded: _isExpanded,
                       onExpanded: () => setState(() {
-                            isExpanded = !isExpanded;
+                            _isExpanded = !_isExpanded;
                           }),
                       children: [
                         Row(
@@ -110,12 +117,18 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                           ),
                         ),
                       ]),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 22),
                   _expansionTile(
                       title: 'Cartão de Débito',
-                      icon: Icons.credit_card,
-                      subtitle: const Text('Bandeiras'),
-                      editable: true,
+                      icon: Image.asset(ConstantAppImages.debitCard,
+                          fit: BoxFit.scaleDown),
+                      subtitle: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Image.asset(
+                              height: 20,
+                              ConstantAppImages.creditCardBanner,
+                              fit: BoxFit.scaleDown)),
+                      editable: widget.isAnAdministrator,
                       expanded: isExpandedDebito,
                       onExpanded: () => setState(() {
                             isExpandedDebito = !isExpandedDebito;
@@ -176,13 +189,25 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
                           ),
                         ),
                       ]),
-                  const SizedBox(height: 30),
-                  _expansionTile(title: 'Vale Refeição', icon: Icons.food_bank),
-                  const SizedBox(height: 30),
-                  _expansionTile(title: 'Pix', icon: Icons.pix),
-                  const SizedBox(height: 30),
-                  _expansionTile(title: 'Picpay', icon: Icons.paypal),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 22),
+                  _expansionTile(
+                    title: 'Vale Refeição',
+                    icon: Image.asset(ConstantAppImages.mealTicket,
+                        fit: BoxFit.scaleDown),
+                  ),
+                  const SizedBox(height: 22),
+                  _expansionTile(
+                    title: 'Pix',
+                    icon: Image.asset(ConstantAppImages.pix,
+                        fit: BoxFit.scaleDown),
+                  ),
+                  const SizedBox(height: 22),
+                  _expansionTile(
+                    title: 'Picpay',
+                    icon: Image.asset(ConstantAppImages.picpay,
+                        fit: BoxFit.scaleDown),
+                  ),
+                  const SizedBox(height: 22),
                 ],
               )),
         ],
@@ -192,7 +217,7 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
 
   Widget _expansionTile(
       {required String title,
-      required IconData icon,
+      required Widget icon,
       Widget? subtitle,
       bool editable = false,
       void Function()? onExpanded,
@@ -209,8 +234,9 @@ class _PaymentMethodsPageState extends State<PaymentMethodsPage> {
       child: ListTile(
         // ignore: sized_box_for_whitespace
         leading: Container(
+          width: 32,
           height: double.infinity,
-          child: Icon(icon),
+          child: icon,
         ),
         shape: RoundedRectangleBorder(
           side: BorderSide(color: Theme.of(context).primaryColor, width: 1),

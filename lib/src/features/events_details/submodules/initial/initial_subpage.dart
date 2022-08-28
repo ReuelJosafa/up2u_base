@@ -1,7 +1,30 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+
+import '../../../../shared/components/alert_dialog_action_button_widget.dart';
+import '../../../../shared/components/commom_text_form_field_widget.dart';
+import '../../../../shared/components/custom_close_button_widget.dart';
+import '../../../../shared/utils/cupertino_utils.dart';
+import '../../../../shared/utils/formmater_money.dart';
+import '../../../../shared/utils/date_time_utils.dart';
+import 'components/body_party_card.dart';
+import 'components/footer_party_card.dart';
+import 'components/header_party_card.dart';
 
 class InicialSubpage extends StatefulWidget {
-  const InicialSubpage({Key? key}) : super(key: key);
+  final bool isAnAdministrator;
+  final String partyName;
+  final String address;
+  const InicialSubpage(
+      {Key? key,
+      required this.isAnAdministrator,
+      required this.partyName,
+      required this.address})
+      : super(key: key);
 
   @override
   State<InicialSubpage> createState() => _InicialSubpageState();
@@ -9,24 +32,81 @@ class InicialSubpage extends StatefulWidget {
 
 class _InicialSubpageState extends State<InicialSubpage> {
   final ScrollController scrollController = ScrollController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController startTimeController = TextEditingController();
+  TextEditingController endTimeController = TextEditingController();
+  TimeOfDay _startTime = TimeOfDay.now();
+  TimeOfDay _endTime = TimeOfDay.now();
+  DateTime _date = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+
+    dateController.text = '';
+  }
+
+  Future<void> _onChooseData() async {
+    await DateTimeUtils.chooseData(
+      context,
+      initialDate: _date,
+      onDateChanged: (newDate) {/* 
+        controller.animateTo(100,
+            duration: const Duration(microseconds: 500), curve: Curves.easeIn); */
+
+        _date = newDate;
+        String formattedDate = DateFormat('dd/MM/yyyy').format(_date);
+        setState(() {
+          dateController.text = formattedDate;
+        });
+      },
+    );
+  }
+
+  Future<void> _onChooseStartTime() async {
+    await DateTimeUtils.chooseTime(
+      context,
+      timeOfDay: _startTime,
+      onTimeChanged: (newTime) {
+        setState(() {
+          _startTime = newTime;
+          startTimeController.text =
+              DateTimeUtils.toPtBrFormat(context, _startTime);
+        });
+      },
+    );
+  }
+
+  Future<void> _onChooseEndTime() async {
+    await DateTimeUtils.chooseTime(
+      context,
+      timeOfDay: _endTime,
+      onTimeChanged: (newTime) {
+        setState(() {
+          _endTime = newTime;
+          endTimeController.text =
+              DateTimeUtils.toPtBrFormat(context, _endTime);
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 32, top: 16),
-        child: Scrollbar(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 32, top: 16),
+      child: Scrollbar(
+        controller: scrollController,
+        thumbVisibility: true,
+        trackVisibility: true,
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           controller: scrollController,
-          thumbVisibility: true,
-          trackVisibility: true,
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            controller: scrollController,
-            scrollDirection: Axis.horizontal,
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return _buildPartyInfoContainer();
-            },
-          ),
+          scrollDirection: Axis.horizontal,
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return _buildPartyInfoContainer();
+          },
         ),
       ),
     );
@@ -44,117 +124,137 @@ class _InicialSubpageState extends State<InicialSubpage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _headerPartyInfo(),
+          HeaderPartyCard(
+            isAnAdministrator: widget.isAnAdministrator,
+            weekDay: 'QUINTA-FEIRA',
+            date: '01/01/2024',
+            onEditCard: _showEditPartyDialog,
+          ),
           const SizedBox(height: 22),
-          Expanded(child: _bodyPartyInfo()),
-          _footerPartyInfo()
+          const Expanded(
+              child: BodyPartyCard(
+            title: 'Lorem ipsum',
+            eventName: 'A volta dos que não foram',
+            schedule: 'A partir das 21:00 às 04:00',
+            entryValue: 'Entrada R\$25,00',
+          )),
+          FooterPartyInfo(
+            isAnUser: !widget.isAnAdministrator,
+            onAddName: () {},
+            onMoreInfos: () {},
+          )
         ],
       ),
     );
   }
 
-  Widget _headerPartyInfo() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text.rich(
-              const TextSpan(
+  void _showEditPartyDialog() {
+    final ThemeData theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
+    Widget buildCommomTextFormField({
+      required String title,
+      required String hintText,
+      TextEditingController? controller,
+      TextInputType? keyboardType,
+      List<TextInputFormatter>? inputFormatters,
+      void Function(String)? onChanged,
+      void Function()? onTap,
+      bool readOnly = false,
+    }) {
+      return CommmomTextFormField(
+        onTap: onTap,
+        onChanged: onChanged,
+        keyboardType: keyboardType,
+        controller: controller,
+        inputFormatters: inputFormatters,
+        title: title,
+        hintText: hintText,
+        readOnly: readOnly,
+        titleStyle: textTheme.headline4!.copyWith(
+            fontWeight: FontWeight.w500,
+            color: theme.buttonTheme.colorScheme!.background),
+        inputStyle: textTheme.bodyText1!
+            .copyWith(color: colorScheme.secondary.withOpacity(0.60)),
+        hintStyle: textTheme.bodyText1!
+            .copyWith(color: colorScheme.secondary.withOpacity(0.5)),
+        underlineColor: colorScheme.secondary.withOpacity(0.73),
+      );
+    }
+
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            titlePadding: const EdgeInsets.all(0),
+            title: Stack(
+              alignment: Alignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 44, 24, 0),
+                  child: Column(
+                    children: [
+                      Text(widget.partyName,
+                          style: textTheme.headline5!.copyWith(
+                              color: colorScheme.primary,
+                              fontWeight: FontWeight.w700)),
+                      Text(widget.address,
+                          style: textTheme.headline4!.copyWith(
+                              color: colorScheme.primary,
+                              fontWeight: FontWeight.w300)),
+                    ],
+                  ),
+                ),
+                const Positioned(top: 2, right: 2, child: CustomCloseButton()),
+              ],
+            ),
+            backgroundColor: colorScheme.onBackground,
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextSpan(text: 'QUINTA-FEIRA'),
-                  TextSpan(text: '\n'),
-                  TextSpan(text: '01/01/2024'),
+                  buildCommomTextFormField(
+                      title: 'Nome do Evento', hintText: 'Lorem ipsum'),
+                  buildCommomTextFormField(
+                      controller: startTimeController,
+                      onTap: _onChooseStartTime,
+                      readOnly: true,
+                      title: 'Horário de início',
+                      hintText: '00h00'),
+                  buildCommomTextFormField(
+                      controller: endTimeController,
+                      onTap: _onChooseEndTime,
+                      readOnly: true,
+                      title: 'Horário de término',
+                      hintText: '00h00'),
+                  buildCommomTextFormField(
+                      controller: dateController,
+                      onTap: _onChooseData,
+                      readOnly: true,
+                      title: 'Data',
+                      hintText: '00/00/00'),
+                  buildCommomTextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        CurrencyPtBrInputFormatter()
+                      ],
+                      keyboardType: TextInputType.number,
+                      title: 'Entrada',
+                      hintText: 'R\$ 00,00'),
+                  buildCommomTextFormField(
+                      title: 'Descrição', hintText: 'Lorem ipsum exemplo'),
                 ],
               ),
-              maxLines: 2,
-              textAlign: TextAlign.start,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1!
-                  .copyWith(fontWeight: FontWeight.w500),
             ),
-            /*  Text(
-              'QUINTA-FEIRA',
-            ),
-            Text('01/01/2024'), */
-          ],
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Editar Card',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(decoration: TextDecoration.underline)),
-            const SizedBox(width: 6),
-            const Icon(Icons.edit, size: 18)
-          ],
-        )
-      ],
-    );
-  }
-
-  Widget _bodyPartyInfo() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Lorem ipsum ',
-            style: Theme.of(context)
-                .textTheme
-                .headline2!
-                .copyWith(fontWeight: FontWeight.w500)),
-        Text('Evento : A volta dos que não foram',
-            style: Theme.of(context)
-                .textTheme
-                .headline4!
-                .copyWith(fontWeight: FontWeight.w300)),
-        Text('A partir de 21:00 às 04:00',
-            style: Theme.of(context).textTheme.headline4),
-        Text('Entrada R\$25,00', style: Theme.of(context).textTheme.headline4),
-      ],
-    );
-  }
-
-  Widget _footerPartyInfo() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text.rich(
-          maxLines: 2,
-          textAlign: TextAlign.center,
-          TextSpan(
-            children: [
-              const WidgetSpan(child: Icon(Icons.add, size: 14)),
-              const WidgetSpan(child: SizedBox(width: 6, height: 6)),
-              TextSpan(
-                  text: 'ADICIONAR NOME',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1!
-                      .copyWith(color: Theme.of(context).primaryColor)),
+            actionsOverflowAlignment: OverflowBarAlignment.center,
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              AlertDialogActionButton(
+                  onPressed: () {}, title: 'Salvar', filled: true),
             ],
-          ),
-        ),
-        Text.rich(
-          maxLines: 2,
-          textAlign: TextAlign.center,
-          TextSpan(
-            children: [
-              const WidgetSpan(child: Icon(Icons.add, size: 14)),
-              const WidgetSpan(child: SizedBox(width: 4, height: 4)),
-              TextSpan(
-                  text: 'Mais Infos',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1!
-                      .copyWith(decoration: TextDecoration.underline)),
-            ],
-          ),
-        ),
-      ],
-    );
+          );
+        }));
   }
 }

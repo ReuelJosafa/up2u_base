@@ -1,17 +1,25 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../shared/components/alert_dialog_action_button_widget.dart';
 import '../../shared/components/custom_app_bar_widget.dart';
-import '../../shared/components/custom_text_form_field_widget.dart';
+import '../../shared/components/custom_close_button_widget.dart';
+import '../../shared/components/commom_text_form_field_widget.dart';
 import '../../shared/components/text_underlined_button_widget.dart';
-import '../payment_methods/payment_methods_page.dart';
+import '../../shared/constants/constant_app_images.dart';
 import 'submodules/about/about_subpage.dart';
 import 'submodules/initial/initial_subpage.dart';
 import 'submodules/list/attandence_list_subpage.dart';
 import 'submodules/menu/menu_subpage.dart';
+import 'submodules/payment_methods/payment_methods_page.dart';
 
 class EventsDetailPage extends StatefulWidget {
-  const EventsDetailPage({Key? key}) : super(key: key);
+  final bool isAnAdministrator;
+
+  const EventsDetailPage({Key? key, required this.isAnAdministrator})
+      : super(key: key);
 
   @override
   State<EventsDetailPage> createState() => _EventsDetailPageState();
@@ -31,24 +39,31 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
   ];
 
   int currentImageindex = 0;
+  String partyName = 'Festa lorem ipsum';
+  String address = 'Rua exemplo - SP';
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: widget.isAnAdministrator ? 4 : 3,
       child: Scaffold(
-        appBar: _appBar(),
-        body: const TabBarView(children: [
-          InicialSubpage(),
-          MenuSubpage(),
-          AttandenceListSubpage(),
-          AboutSubpage()
+        appBar: _buildAppBar(),
+        resizeToAvoidBottomInset: false,
+        body: TabBarView(children: [
+          InicialSubpage(
+            isAnAdministrator: widget.isAnAdministrator,
+            partyName: partyName,
+            address: address,
+          ),
+          MenuSubpage(isAnAdministrator: widget.isAnAdministrator),
+          if (widget.isAnAdministrator) const AttandenceListSubpage(),
+          AboutSubpage(isAnAdministrator: widget.isAnAdministrator)
         ]),
       ),
     );
   }
 
-  PreferredSizeWidget _appBar() {
+  PreferredSizeWidget _buildAppBar() {
     return CustomAppBar(
       bottomRightRadius: 30,
       bottomLeftRadius: 30,
@@ -99,28 +114,50 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                   top: 46,
                   left: 16,
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
+                    onTap: () => Navigator.pop(context),
                     child: const Icon(Icons.arrow_back_ios_new_outlined),
                   ),
                 ),
+                if (widget.isAnAdministrator)
+                  Positioned(
+                    top: 46,
+                    right: 16,
+                    child: GestureDetector(
+                      onTap: _showChagePhotosDialog,
+                      child: SvgPicture.asset(ConstantAppImages.editAlt),
+                    ),
+                  ),
               ],
             ),
-            // const SizedBox(height: 16),
             ListTile(
               minVerticalPadding: 15,
-              leading: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(12),
+              leading: Stack(
+                alignment: AlignmentDirectional.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    height: 46,
+                    width: 46,
+                    child: ImageFiltered(
+                      imageFilter: widget.isAnAdministrator
+                          ? ImageFilter.blur(
+                              sigmaX: 2, sigmaY: 2, tileMode: TileMode.decal)
+                          : ImageFilter.blur(),
+                      child: Image.asset('images/party_logo.png',
+                          fit: BoxFit.cover),
+                    ),
                   ),
-                  height: 46,
-                  width: 46),
-              title: const Text('Festa lorem ipsum'),
-              subtitle: const Text('Rua exemplo - SP'),
+                  if (widget.isAnAdministrator)
+                    SvgPicture.asset(ConstantAppImages.camera,
+                        fit: BoxFit.scaleDown)
+                ],
+              ),
+              title: Text(partyName),
+              subtitle: Text(address),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
@@ -134,12 +171,13 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                       onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  const PaymentMethodsPage())),
-                      child: const Icon(Icons.credit_card)),
+                              builder: (context) => PaymentMethodsPage(
+                                  isAnAdministrator:
+                                      widget.isAnAdministrator))),
+                      child: SvgPicture.asset(ConstantAppImages.creditCard)),
                   _buildCustomElevatedButton(
                       onPressed: () {
-                        _wifiAlertDialog();
+                        _showWifiAlertDialog();
                       },
                       child: const Icon(Icons.wifi)),
                 ],
@@ -150,39 +188,99 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
               indicatorColor: Colors.white,
               indicatorSize: TabBarIndicatorSize.label,
               indicatorWeight: 5,
-              // indicatorPadding: EdgeInsets.symmetric(horizontal: 16),
               labelColor: Theme.of(context).colorScheme.secondary,
               labelStyle: Theme.of(context).textTheme.headline3!.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              tabs: const [
-                Tab(text: 'Início'),
-                Tab(text: 'Cardápio'),
-                Tab(text: 'Lista'),
-                Tab(text: 'Sobre'),
+              tabs: [
+                const Tab(text: 'Início'),
+                const Tab(text: 'Cardápio'),
+                if (widget.isAnAdministrator) const Tab(text: 'Lista'),
+                const Tab(text: 'Sobre'),
               ],
             )
           ]),
     );
   }
 
-  Widget _closeButton() {
-    return GestureDetector(
-      onTap: () => Navigator.pop(context),
-      child: const CircleAvatar(
-        radius: 9,
-        backgroundColor: Color.fromRGBO(126, 134, 158, 0.25),
-        child: Icon(
-          Icons.close,
-          color: Colors.white,
-          size: 16,
-        ),
-      ),
-    );
+  void _showChagePhotosDialog() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    Widget buildPhotoCard() {
+      return Stack(
+        children: [
+          Container(
+            height: 120,
+            width: 98,
+            decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: const BorderRadius.all(Radius.circular(9))),
+          ),
+          Positioned(
+              bottom: 10,
+              right: 8,
+              child: InkWell(
+                  onTap: () {},
+                  child: SvgPicture.asset(ConstantAppImages.delete,
+                      fit: BoxFit.scaleDown)))
+        ],
+      );
+    }
+
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            backgroundColor: colorScheme.onBackground,
+            titlePadding: const EdgeInsets.all(0),
+            title: Stack(
+              alignment: Alignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 44, 24, 0),
+                  child: Text('Edite suas fotos',
+                      style: textTheme.headline5!.copyWith(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.w700)),
+                ),
+                const Positioned(top: 2, right: 2, child: CustomCloseButton()),
+              ],
+            ),
+            content: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              alignment: WrapAlignment.center,
+              children: [
+                buildPhotoCard(),
+                buildPhotoCard(),
+                buildPhotoCard(),
+                buildPhotoCard(),
+                buildPhotoCard(),
+                /* Container(
+                  height: 120,
+                  width: 98,
+                  decoration: const BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.all(Radius.circular(9))),
+                  child: const Center(child: Icon(Icons.add)),
+                ) */
+              ],
+            ),
+            actionsOverflowAlignment: OverflowBarAlignment.center,
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              AlertDialogActionButton(
+                  onPressed: () {}, title: 'Salvar', filled: true),
+            ],
+          );
+        }));
   }
 
-  void _wifiAlertDialog() {
+  void _showWifiAlertDialog() {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final buttonColorScheme = Theme.of(context).buttonTheme.colorScheme;
@@ -193,10 +291,12 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             backgroundColor: colorScheme.onBackground,
+            titlePadding: const EdgeInsets.all(0),
             title: Stack(
+              alignment: Alignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.fromLTRB(24, 44, 24, 0),
                   child: Text(
                     'Lorem ipsum nome wifi',
                     style: textTheme.headline4!.copyWith(
@@ -204,7 +304,7 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                         fontWeight: FontWeight.w600),
                   ),
                 ),
-                Positioned(top: 0, right: 0, child: _closeButton()),
+                const Positioned(top: 2, right: 2, child: CustomCloseButton()),
               ],
             ),
             content: Column(
@@ -220,7 +320,6 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                 const SizedBox(height: 32),
                 Container(
                   alignment: Alignment.center,
-                  // width: 90,
                   height: 40,
                   decoration: BoxDecoration(
                       border: Border.all(color: buttonColorScheme!.background),
@@ -237,20 +336,22 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
             ),
             actionsOverflowAlignment: OverflowBarAlignment.center,
             actionsAlignment: MainAxisAlignment.center,
-            actions: [
-              TextUnderlinedButton(
-                onTap: _editWifiAlertDialog,
-                title: 'Editar',
-                style: Theme.of(context).textTheme.headline4!.copyWith(
-                    decoration: TextDecoration.underline,
-                    color: Theme.of(context).primaryColor),
-              ),
-            ],
+            actions: widget.isAnAdministrator
+                ? [
+                    TextUnderlinedButton(
+                      onTap: _showEditWifiAlertDialog,
+                      title: 'Editar',
+                      style: Theme.of(context).textTheme.headline4!.copyWith(
+                          decoration: TextDecoration.underline,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                  ]
+                : null,
           );
         }));
   }
 
-  void _editWifiAlertDialog() {
+  void _showEditWifiAlertDialog() {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     showDialog(
@@ -260,14 +361,17 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             backgroundColor: colorScheme.onBackground,
+            contentPadding: const EdgeInsets.all(0),
             content: Stack(
+              alignment: Alignment.center,
               children: [
                 SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CustomTextFormField(
+                      CommmomTextFormField(
                         title: 'Nome da rede',
                         hintText: 'Lorem ipsum',
                         titleStyle: textTheme.bodyText1!.copyWith(
@@ -280,7 +384,7 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                         underlineColor:
                             const Color(0xFF000000).withOpacity(0.29),
                       ),
-                      CustomTextFormField(
+                      CommmomTextFormField(
                         title: 'Descrição',
                         hintText: 'Lorem ipsum',
                         titleStyle: textTheme.bodyText1!.copyWith(
@@ -293,9 +397,14 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                         underlineColor:
                             const Color(0xFF000000).withOpacity(0.29),
                       ),
-                      CustomTextFormField(
+                      CommmomTextFormField(
                         title: 'Senha',
                         hintText: '0000-0000',
+                        textInputAction: TextInputAction.done,
+                        keyboardType: TextInputType.visiblePassword,
+                        onFieldSubmitted: (_) {
+                          //TODO: Submeter formulário aqui.
+                        },
                         titleStyle: textTheme.bodyText1!.copyWith(
                             fontWeight: FontWeight.w500,
                             color: const Color(0xFF000000).withOpacity(0.59)),
@@ -309,7 +418,7 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                     ],
                   ),
                 ),
-                Positioned(top: 0, right: 0, child: _closeButton()),
+                const Positioned(top: 2, right: 2, child: CustomCloseButton()),
               ],
             ),
             actionsOverflowAlignment: OverflowBarAlignment.center,

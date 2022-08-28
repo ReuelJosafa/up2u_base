@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'features/auth/auth_page.dart';
 
@@ -11,6 +12,14 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       title: 'Flutter Demo',
       theme: _buildTheme(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+      ],
       home: const AuthPage(),
     );
   }
@@ -38,13 +47,14 @@ class MyApp extends StatelessWidget {
             outline: const Color(0xFFFBBC05),
             background: const Color(0xFFFBBC05),
           )),
-      dialogTheme: const DialogTheme(
+      dialogTheme: DialogTheme(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         backgroundColor: Colors.white,
-        titleTextStyle: TextStyle(
+        titleTextStyle: const TextStyle(
             color: Color(0xFF0D0D0D),
             fontWeight: FontWeight.w600,
             fontSize: 14.0),
-        contentTextStyle: TextStyle(
+        contentTextStyle: const TextStyle(
             color: Color(0xFF0D0D0D),
             fontWeight: FontWeight.w500,
             fontSize: 12.0),

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
 class CustomOutlineInputText extends StatelessWidget {
-  const CustomOutlineInputText({Key? key}) : super(key: key);
+  final TextEditingController? controller;
+  final Function(String)? onChanged;
+  const CustomOutlineInputText({Key? key, this.controller, this.onChanged})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      onChanged: (value) {},
+      controller: controller,
+      onChanged: onChanged,
       style: Theme.of(context).textTheme.headline4!.copyWith(
           color: Theme.of(context).colorScheme.secondary,
           fontWeight: FontWeight.w300),

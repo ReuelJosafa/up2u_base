@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../shared/components/custom_elevated_button_widget.dart';
-import '../../shared/contants/constant_app_images.dart';
+import '../../shared/constants/constant_app_images.dart';
 
 class UseTermsPage extends StatefulWidget {
   final bool isOnlyVisualization;
@@ -15,9 +15,8 @@ class UseTermsPage extends StatefulWidget {
 class _UseTermsPageState extends State<UseTermsPage> {
   @override
   Widget build(BuildContext context) {
-    widget.isOnlyVisualization;
     return Scaffold(
-      appBar: _cunstomAppBar(),
+      appBar: _buildCustomAppBar(),
       body: Stack(
         alignment: AlignmentDirectional.center,
         children: [
@@ -47,9 +46,7 @@ class _UseTermsPageState extends State<UseTermsPage> {
                   const SizedBox(height: 22),
                   CustomElevatedButton(
                       title: widget.isOnlyVisualization ? 'Voltar' : 'Aceitar',
-                      onPressed: () {
-                        Navigator.pop(context, true);
-                      }),
+                      onPressed: () => Navigator.pop(context, true)),
                 ],
               ),
             ),
@@ -59,13 +56,11 @@ class _UseTermsPageState extends State<UseTermsPage> {
     );
   }
 
-  AppBar _cunstomAppBar() {
+  AppBar _buildCustomAppBar() {
     return AppBar(
       leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () {
-            Navigator.pop(context);
-          }),
+          onPressed: () => Navigator.pop(context)),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: Text('Termos de uso',
           style: Theme.of(context)

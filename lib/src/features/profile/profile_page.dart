@@ -6,12 +6,14 @@ import 'package:up2u_base/src/features/users/users_page.dart';
 
 import '../../shared/components/alert_dialog_action_button_widget.dart';
 import '../../shared/components/custom_app_bar_widget.dart';
-import '../../shared/contants/constant_app_images.dart';
+import '../../shared/constants/constant_app_images.dart';
 import '../favorite/favorite_page.dart';
 import 'components/custom_button_widget.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  final bool isAnAdministrator;
+  const ProfilePage({Key? key, required this.isAnAdministrator})
+      : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -19,12 +21,19 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   int selectedIndex = 1;
-  bool isAnAdministrator = true;
+  String userName = 'Lorem ipsum Silva';
+  String email = 'loremipsum@gmail.com';
+
+  void _logout() {}
+
+  void _navigateTo(Widget page) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appBar(),
+      appBar: _buildAppBar(),
       body: Stack(
         children: [
           Center(child: Image.asset(ConstantAppImages.background, height: 352)),
@@ -34,126 +43,97 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 52),
               CustomButton(
                 title: 'Conta',
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AccountPage())),
+                onTap: () => _navigateTo(AccountPage(
+                  isAnAdministrator: widget.isAnAdministrator,
+                )),
               ),
-              if (isAnAdministrator)
+              if (widget.isAnAdministrator)
                 CustomButton(
                   title: 'Promoções',
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PromotionsPage())),
+                  onTap: () => _navigateTo(const PromotionsPage()),
                 ),
-              if (isAnAdministrator)
+              if (widget.isAnAdministrator)
                 CustomButton(
                   title: 'Usuários',
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const UsersPage())),
+                  onTap: () => _navigateTo(const UsersPage()),
                 ),
-              if (!isAnAdministrator)
+              if (!widget.isAnAdministrator)
                 CustomButton(
                   title: 'Favoritos',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const FavoritePage()));
-                  },
+                  onTap: () => _navigateTo(const FavoritePage()),
                 ),
-              if (!isAnAdministrator)
+              if (!widget.isAnAdministrator)
                 CustomButton(
                   title: 'Sobre',
                   onTap: () {},
                 ),
               CustomButton(
                 title: 'Termos de Serviços',
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const UseTermsPage(isOnlyVisualization: true)));
-                },
+                onTap: () =>
+                    _navigateTo(const UseTermsPage(isOnlyVisualization: true)),
               ),
               CustomButton(
                 title: 'Sair',
                 rigthArrow: false,
                 bottomDivider: false,
                 titleUnderline: true,
-                onTap: _logoutAlertDialog,
+                onTap: _showLogoutAlertDialog,
               ),
             ]),
           ),
-
-          //TODO: Remover Switch, pois sua finalidade é alternar entre usuário e administrador
-
-          Switch(
-              value: isAnAdministrator,
-              onChanged: ((value) => setState(() {
-                    isAnAdministrator = value;
-                  }))),
         ],
       ),
     );
   }
 
-  PreferredSizeWidget _appBar() {
+  PreferredSizeWidget _buildAppBar() {
     final textTheme = Theme.of(context).textTheme;
 
     return CustomAppBar(
       bottomRightRadius: 30,
       height: 145,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 30),
-        child: SafeArea(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 9),
-                Row(
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Material(
+                borderRadius: BorderRadius.circular(40),
+                elevation: 4,
+                //TODO: Substituir por imagem do usuário e usar NetworkImage.
+                child: const CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage('images/profile_picture.jpeg')),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Material(
-                      borderRadius: BorderRadius.circular(50),
-                      elevation: 4,
-                      //TODO: Substituir por imagem do usuário
-                      child: const CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                              AssetImage('images/profile_picture.jpeg')
-
-                          /* NetworkImage(
-                              'https://images.pexels.com/photos/1085517/pexels-photo-1085517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') */
-                          ),
+                    Text(
+                      userName,
+                      maxLines: 2,
+                      style: textTheme.headline3!
+                          .copyWith(fontWeight: FontWeight.w500),
                     ),
-                    const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Lorem ipsum Silva',
-                          style: textTheme.headline4,
-                        ),
-                        Text(
-                          'loremipsum@gmail.com',
-                          style: textTheme.subtitle2,
-                        ),
-                      ],
+                    Text(
+                      email,
+                      style: textTheme.bodyText1,
                     ),
+                    const SizedBox(height: 8),
                   ],
                 ),
-              ]),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void _logoutAlertDialog() {
+  void _showLogoutAlertDialog() {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     showDialog(
@@ -177,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   outlineBorder: true),
               const SizedBox(width: 8),
               AlertDialogActionButton(
-                  onPressed: () {}, title: 'Sair', filled: true),
+                  onPressed: _logout, title: 'Sair', filled: true),
             ],
           );
         }));

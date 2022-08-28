@@ -4,7 +4,7 @@ import '../../shared/components/commom_app_bar_widget.dart';
 import '../../shared/components/custom_checkbox_tile_widget.dart';
 import '../../shared/components/custom_container_action_widget.dart';
 import '../../shared/components/custom_expansion_tile_wiget.dart';
-import '../../shared/components/custom_text_form_field_widget.dart';
+import '../../shared/components/commom_text_form_field_widget.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({Key? key}) : super(key: key);
@@ -14,23 +14,26 @@ class UsersPage extends StatefulWidget {
 }
 
 class _UsersPageState extends State<UsersPage> {
+  final formKey = GlobalKey<FormState>();
   bool isExpanded = false;
+
+  void _addUser() {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CommomAppBar(
         title: 'Usuários',
-        subtitle:
-            'Adicione ou modifique o nivel de acesso dos seus funcionarios',
+        subtitle: 'Adicione ou modifique o nível de acesso dos seus usuários',
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              CustomExpansionTile(
-                title: 'Adicionar Funcionário',
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Column(
+          children: [
+            Form(
+              key: formKey,
+              child: CustomExpansionTile(
+                title: 'Adicionar Usuário',
                 isExpanded: isExpanded,
                 onExpansionChanged: (value) {
                   setState(() {
@@ -38,15 +41,18 @@ class _UsersPageState extends State<UsersPage> {
                   });
                 },
                 children: [
-                  //TODO: Adicionar controller neste widget
-                  const CustomTextFormField(
-                      title: 'Nome', hintText: 'Lorem ipsum exemplo'),
-                  const CustomTextFormField(
+                  const CommmomTextFormField(
+                      title: 'Nome', hintText: 'Lorem ipsum Silva'),
+                  const CommmomTextFormField(
                       title: 'Cargo', hintText: 'Lorem ipsum exemplo'),
-                  const CustomTextFormField(
-                      title: 'Email', hintText: 'Lorem ipsum exemplo'),
-                  const CustomTextFormField(
-                      title: 'Senha', hintText: '***********'),
+                  const CommmomTextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      title: 'E-mail',
+                      hintText: 'Fulano@gmail.com'),
+                  const CommmomTextFormField(
+                      keyboardType: TextInputType.visiblePassword,
+                      title: 'Senha',
+                      hintText: '***********'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -69,12 +75,12 @@ class _UsersPageState extends State<UsersPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomCheckboxTile(
-                            title: 'Cardapio',
+                            title: 'Cardápio',
                             value: false,
                             onChanged: (value) {},
                           ),
                           CustomCheckboxTile(
-                            title: 'Edição de usuarios',
+                            title: 'Edição de usuários',
                             value: false,
                             onChanged: (value) {},
                           ),
@@ -86,7 +92,7 @@ class _UsersPageState extends State<UsersPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _addUser,
                       style: ElevatedButton.styleFrom(
                         elevation: 0,
                         textStyle: Theme.of(context)
@@ -103,18 +109,20 @@ class _UsersPageState extends State<UsersPage> {
                   ),
                 ],
               ),
-              const CustomContainerAction(
-                  title: 'André Mineiro',
-                  subtitle: 'Barman',
-                  thirdtitle: 'Permissões: Cardapio',
-                  trailing: Icon(Icons.arrow_forward_ios_rounded)),
-              const CustomContainerAction(
-                  title: 'André Mineiro',
-                  subtitle: 'Barman',
-                  thirdtitle: 'Permissões: Cardapio',
-                  trailing: Icon(Icons.arrow_forward_ios_rounded)),
-            ],
-          ),
+            ),
+            ListView.builder(
+                shrinkWrap: true,
+                physics:
+                    const ScrollPhysics(parent: NeverScrollableScrollPhysics()),
+                itemCount: 3,
+                itemBuilder: (context, index) {
+                  return CustomContainerAction(
+                      title: 'André Mineiro $index',
+                      subtitle: 'Barman',
+                      thirdtitle: 'Permissões: Cardápio',
+                      trailing: const Icon(Icons.arrow_forward_ios_rounded));
+                }),
+          ],
         ),
       ),
     );
