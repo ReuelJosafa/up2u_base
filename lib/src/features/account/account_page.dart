@@ -6,6 +6,7 @@ import '../../shared/components/custom_app_bar_widget.dart';
 import '../../shared/components/custom_elevated_button_widget.dart';
 import '../../shared/components/commom_text_form_field_widget.dart';
 import '../../shared/constants/constant_app_images.dart';
+import '../../shared/utils/components_utils.dart';
 
 class AccountPage extends StatefulWidget {
   final bool isAnAdministrator;
@@ -57,7 +58,7 @@ class _AccountPageState extends State<AccountPage> {
                   ),
                   CommmomTextFormField(
                       onChanged: (p0) {
-                        print(phoneMaskFormatter.getUnmaskedText());
+                        debugPrint(phoneMaskFormatter.getUnmaskedText());
                       },
                       title: 'Telefone',
                       hintText: '(00) 00000-0000',
@@ -126,10 +127,9 @@ class _AccountPageState extends State<AccountPage> {
                             .copyWith(fontWeight: FontWeight.w500))
                   ]),
               Positioned(
-                  top: 16,
-                  child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: const Icon(Icons.arrow_back_ios_new_outlined))),
+                top: 16,
+                child: ComponentsUtils.buildArrowBack(context),
+              ),
             ]))));
   }
 }

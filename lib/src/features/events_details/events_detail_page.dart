@@ -9,6 +9,7 @@ import '../../shared/components/custom_close_button_widget.dart';
 import '../../shared/components/commom_text_form_field_widget.dart';
 import '../../shared/components/text_underlined_button_widget.dart';
 import '../../shared/constants/constant_app_images.dart';
+import '../../shared/utils/components_utils.dart';
 import 'submodules/about/about_subpage.dart';
 import 'submodules/initial/initial_subpage.dart';
 import 'submodules/list/attandence_list_subpage.dart';
@@ -36,11 +37,15 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
     'images/party1.jpg',
     'images/party2.jpg',
     'images/party3.jpg',
+    'images/party1.jpg',
+    'images/party2.jpg',
+    'images/party3.jpg',
   ];
 
   int currentImageindex = 0;
   String partyName = 'Festa lorem ipsum';
   String address = 'Rua exemplo - SP';
+  String logoUrl = 'images/party_logo.png';
 
   @override
   Widget build(BuildContext context) {
@@ -74,49 +79,12 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
           children: [
             Stack(
               children: [
-                SizedBox(
-                  height: 180,
-                  width: double.maxFinite,
-                  child: PageView.builder(
-                      itemCount: imagesPub.length,
-                      pageSnapping: true,
-                      onPageChanged: ((value) {
-                        setState(() {
-                          currentImageindex = value;
-                        });
-                      }),
-                      itemBuilder: (context, pagePosition) {
-                        return Container(
-                            margin: const EdgeInsets.all(0),
-                            child: Image.asset(imagesPub[pagePosition],
-                                fit: BoxFit.cover));
-                      }),
-                ),
-                Positioned.fill(
-                  bottom: 16,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children:
-                            List<Widget>.generate(imagesPub.length, (index) {
-                          return Container(
-                            margin: const EdgeInsets.all(3),
-                            width: currentImageindex == index ? 10 : 5,
-                            height: currentImageindex == index ? 10 : 5,
-                            decoration: const BoxDecoration(
-                                color: Colors.white, shape: BoxShape.circle),
-                          );
-                        })),
-                  ),
-                ),
+                _buildSlidePhotos(),
+                _buildSlidePhotosIndicator(),
                 Positioned(
                   top: 46,
                   left: 16,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: const Icon(Icons.arrow_back_ios_new_outlined),
-                  ),
+                  child: ComponentsUtils.buildArrowBack(context),
                 ),
                 if (widget.isAnAdministrator)
                   Positioned(
@@ -146,8 +114,8 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                           ? ImageFilter.blur(
                               sigmaX: 2, sigmaY: 2, tileMode: TileMode.decal)
                           : ImageFilter.blur(),
-                      child: Image.asset('images/party_logo.png',
-                          fit: BoxFit.cover),
+                      // TODO: alterar para Image.network e alterar url na variável.
+                      child: Image.asset(logoUrl, fit: BoxFit.cover),
                     ),
                   ),
                   if (widget.isAnAdministrator)
@@ -163,22 +131,22 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // TODO: implementar ação conforme orientação no Trello.
                   Expanded(
                     child: _buildCustomElevatedButton(
                         onPressed: () {}, child: const Text('Ir para o local')),
                   ),
                   _buildCustomElevatedButton(
                       onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PaymentMethodsPage(
-                                  isAnAdministrator:
-                                      widget.isAnAdministrator))),
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PaymentMethodsPage(
+                                    isAnAdministrator:
+                                        widget.isAnAdministrator)),
+                          ),
                       child: SvgPicture.asset(ConstantAppImages.creditCard)),
                   _buildCustomElevatedButton(
-                      onPressed: () {
-                        _showWifiAlertDialog();
-                      },
+                      onPressed: _showWifiAlertDialog,
                       child: const Icon(Icons.wifi)),
                 ],
               ),
@@ -204,30 +172,48 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
     );
   }
 
+  Widget _buildSlidePhotos() {
+    return SizedBox(
+      height: 180,
+      width: double.maxFinite,
+      child: PageView.builder(
+          itemCount: imagesPub.length,
+          onPageChanged: ((value) {
+            setState(() {
+              currentImageindex = value;
+            });
+          }),
+          itemBuilder: (context, pagePosition) {
+            return Container(
+                margin: const EdgeInsets.all(0),
+                child: Image.asset(imagesPub[pagePosition], fit: BoxFit.cover));
+          }),
+    );
+  }
+
+  Widget _buildSlidePhotosIndicator() {
+    return Positioned.fill(
+      bottom: 16,
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List<Widget>.generate(imagesPub.length, (index) {
+              return Container(
+                margin: const EdgeInsets.all(3),
+                width: currentImageindex == index ? 10 : 5,
+                height: currentImageindex == index ? 10 : 5,
+                decoration: const BoxDecoration(
+                    color: Colors.white, shape: BoxShape.circle),
+              );
+            })),
+      ),
+    );
+  }
+
   void _showChagePhotosDialog() {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-
-    Widget buildPhotoCard() {
-      return Stack(
-        children: [
-          Container(
-            height: 120,
-            width: 98,
-            decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: const BorderRadius.all(Radius.circular(9))),
-          ),
-          Positioned(
-              bottom: 10,
-              right: 8,
-              child: InkWell(
-                  onTap: () {},
-                  child: SvgPicture.asset(ConstantAppImages.delete,
-                      fit: BoxFit.scaleDown)))
-        ],
-      );
-    }
 
     showDialog(
         context: context,
@@ -250,25 +236,27 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                 const Positioned(top: 2, right: 2, child: CustomCloseButton()),
               ],
             ),
-            content: Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              alignment: WrapAlignment.center,
-              children: [
-                buildPhotoCard(),
-                buildPhotoCard(),
-                buildPhotoCard(),
-                buildPhotoCard(),
-                buildPhotoCard(),
-                /* Container(
-                  height: 120,
-                  width: 98,
-                  decoration: const BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.all(Radius.circular(9))),
-                  child: const Center(child: Icon(Icons.add)),
-                ) */
-              ],
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              height: MediaQuery.of(context).size.height * 0.5,
+              child: GridView.count(
+                childAspectRatio: (1 / .75),
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 16,
+                children: [
+                  for (var image in imagesPub) _buildPhotoCard(image),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.all(Radius.circular(9))),
+                      child: const Center(child: Icon(Icons.add)),
+                    ),
+                  )
+                ],
+              ),
             ),
             actionsOverflowAlignment: OverflowBarAlignment.center,
             actionsAlignment: MainAxisAlignment.center,
@@ -278,6 +266,27 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
             ],
           );
         }));
+  }
+
+  Widget _buildPhotoCard(String imageUrl) {
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  fit: BoxFit.cover, image: AssetImage(imageUrl)),
+              color: Colors.grey[300],
+              borderRadius: const BorderRadius.all(Radius.circular(9))),
+        ),
+        Positioned(
+            bottom: 10,
+            right: 8,
+            child: InkWell(
+                onTap: () {},
+                child: SvgPicture.asset(ConstantAppImages.delete,
+                    fit: BoxFit.scaleDown)))
+      ],
+    );
   }
 
   void _showWifiAlertDialog() {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class CustomOutlineInputText extends StatelessWidget {
+class CustomOutlineSearch extends StatelessWidget {
   final TextEditingController? controller;
   final Function(String)? onChanged;
-  const CustomOutlineInputText({Key? key, this.controller, this.onChanged})
+  const CustomOutlineSearch({Key? key, this.controller, this.onChanged})
       : super(key: key);
 
   @override

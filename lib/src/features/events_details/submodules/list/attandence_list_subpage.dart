@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../shared/components/alert_dialog_action_button_widget.dart';
 import '../../../../shared/components/custom_checkbox_tile_widget.dart';
+import 'models/person_presence.dart';
 
 class AttandenceListSubpage extends StatefulWidget {
   const AttandenceListSubpage({Key? key}) : super(key: key);
@@ -11,6 +12,16 @@ class AttandenceListSubpage extends StatefulWidget {
 }
 
 class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
+  final date = '15/06';
+
+  List<PersonPresence> presenceList = List.generate(
+      30,
+      (index) => PersonPresence(
+          name: 'lorem ipsum Exemplo $index',
+          present: index != 1,
+          email: 'Loremipsum$index@gmail.com',
+          phone: '00000-0000'));
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,7 +30,7 @@ class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
         Padding(
           padding: const EdgeInsets.only(left: 22, bottom: 16, top: 28),
           child: Text(
-            '15/06',
+            date,
             style: Theme.of(context)
                 .textTheme
                 .bodyText1!
@@ -28,15 +39,20 @@ class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
         ),
         Expanded(
           child: ListView.builder(
-            
             shrinkWrap: true,
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            itemCount: 30,
+            itemCount: presenceList.length,
             itemBuilder: (context, index) {
               return _buildAttandanceListTile(
-                  name: 'lorem ipsum Exemplo',
-                  isPresent: index != 1,
-                  onTap: _editPreseceAlertDialog);
+                  name: presenceList[index].name,
+                  isPresent: presenceList[index].present,
+                  onTap: () => _editPreseceAlertDialog(
+                        presenceList[index],
+                        onChanged: () => setState(() {
+                          presenceList[index].present =
+                              !presenceList[index].present;
+                        }),
+                      ));
             },
           ),
         ),
@@ -80,7 +96,8 @@ class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
     );
   }
 
-  void _editPreseceAlertDialog() {
+  void _editPreseceAlertDialog(PersonPresence personPresence,
+      {void Function()? onChanged}) {
     final colorScheme = Theme.of(context).colorScheme;
     showDialog(
         context: context,
@@ -89,28 +106,34 @@ class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             backgroundColor: colorScheme.onBackground,
-            title: const Text('Confirmar presença de Lorem ipsum?'),
+            title: Text('Confirmar presença de ${personPresence.name}?'),
             content: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildTitleAndSubtitle(
-                      title: 'Nome', subtitle: 'Lorem ipsum'),
+                      title: 'Nome', subtitle: personPresence.name),
                   _buildTitleAndSubtitle(
-                      title: 'Email', subtitle: 'Loremipsum@gmail.com'),
+                      title: 'Email', subtitle: personPresence.email),
                   _buildTitleAndSubtitle(
-                      title: 'Telefone', subtitle: '00000-0000'),
-                  CustomCheckboxTile(
-                    title: 'Presente',
-                    style: Theme.of(context)
-                        .dialogTheme
-                        .contentTextStyle!
-                        .copyWith(
-                            fontWeight: FontWeight.w400,
-                            color: const Color(0xFF696969)),
-                    value: true,
-                    onChanged: (value) {},
+                      title: 'Telefone', subtitle: personPresence.phone),
+                  StatefulBuilder(
+                    builder: (context, setState) {
+                      return CustomCheckboxTile(
+                        title: personPresence.present ? 'Presente' : 'Ausente',
+                        style: Theme.of(context)
+                            .dialogTheme
+                            .contentTextStyle!
+                            .copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xFF696969)),
+                        value: personPresence.present,
+                        onChanged: (value) {
+                          setState(onChanged!);
+                        },
+                      );
+                    },
                   ),
                 ],
               ),
@@ -118,6 +141,8 @@ class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
             actionsOverflowAlignment: OverflowBarAlignment.center,
             actionsAlignment: MainAxisAlignment.center,
             actions: [
+              //TODO: Revisar quando o usuário quiser salvar ou não a alteração.
+
               AlertDialogActionButton(
                   onPressed: () => Navigator.pop(context),
                   title: 'Voltar',

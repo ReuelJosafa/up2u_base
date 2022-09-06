@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -8,9 +5,8 @@ import 'package:intl/intl.dart';
 import '../../../../shared/components/alert_dialog_action_button_widget.dart';
 import '../../../../shared/components/commom_text_form_field_widget.dart';
 import '../../../../shared/components/custom_close_button_widget.dart';
-import '../../../../shared/utils/cupertino_utils.dart';
-import '../../../../shared/utils/formmater_money.dart';
 import '../../../../shared/utils/date_time_utils.dart';
+import '../../../../shared/utils/formmater_money.dart';
 import 'components/body_party_card.dart';
 import 'components/footer_party_card.dart';
 import 'components/header_party_card.dart';
@@ -50,10 +46,7 @@ class _InicialSubpageState extends State<InicialSubpage> {
     await DateTimeUtils.chooseData(
       context,
       initialDate: _date,
-      onDateChanged: (newDate) {/* 
-        controller.animateTo(100,
-            duration: const Duration(microseconds: 500), curve: Curves.easeIn); */
-
+      onDateChanged: (newDate) {
         _date = newDate;
         String formattedDate = DateFormat('dd/MM/yyyy').format(_date);
         setState(() {
@@ -153,36 +146,6 @@ class _InicialSubpageState extends State<InicialSubpage> {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
-    Widget buildCommomTextFormField({
-      required String title,
-      required String hintText,
-      TextEditingController? controller,
-      TextInputType? keyboardType,
-      List<TextInputFormatter>? inputFormatters,
-      void Function(String)? onChanged,
-      void Function()? onTap,
-      bool readOnly = false,
-    }) {
-      return CommmomTextFormField(
-        onTap: onTap,
-        onChanged: onChanged,
-        keyboardType: keyboardType,
-        controller: controller,
-        inputFormatters: inputFormatters,
-        title: title,
-        hintText: hintText,
-        readOnly: readOnly,
-        titleStyle: textTheme.headline4!.copyWith(
-            fontWeight: FontWeight.w500,
-            color: theme.buttonTheme.colorScheme!.background),
-        inputStyle: textTheme.bodyText1!
-            .copyWith(color: colorScheme.secondary.withOpacity(0.60)),
-        hintStyle: textTheme.bodyText1!
-            .copyWith(color: colorScheme.secondary.withOpacity(0.5)),
-        underlineColor: colorScheme.secondary.withOpacity(0.73),
-      );
-    }
-
     showDialog(
         context: context,
         builder: ((context) {
@@ -215,27 +178,27 @@ class _InicialSubpageState extends State<InicialSubpage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  buildCommomTextFormField(
+                  _buildCommomTextFormField(
                       title: 'Nome do Evento', hintText: 'Lorem ipsum'),
-                  buildCommomTextFormField(
+                  _buildCommomTextFormField(
                       controller: startTimeController,
                       onTap: _onChooseStartTime,
                       readOnly: true,
                       title: 'Horário de início',
                       hintText: '00h00'),
-                  buildCommomTextFormField(
+                  _buildCommomTextFormField(
                       controller: endTimeController,
                       onTap: _onChooseEndTime,
                       readOnly: true,
                       title: 'Horário de término',
                       hintText: '00h00'),
-                  buildCommomTextFormField(
+                  _buildCommomTextFormField(
                       controller: dateController,
                       onTap: _onChooseData,
                       readOnly: true,
                       title: 'Data',
                       hintText: '00/00/00'),
-                  buildCommomTextFormField(
+                  _buildCommomTextFormField(
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         CurrencyPtBrInputFormatter()
@@ -243,7 +206,7 @@ class _InicialSubpageState extends State<InicialSubpage> {
                       keyboardType: TextInputType.number,
                       title: 'Entrada',
                       hintText: 'R\$ 00,00'),
-                  buildCommomTextFormField(
+                  _buildCommomTextFormField(
                       title: 'Descrição', hintText: 'Lorem ipsum exemplo'),
                 ],
               ),
@@ -256,5 +219,38 @@ class _InicialSubpageState extends State<InicialSubpage> {
             ],
           );
         }));
+  }
+
+  Widget _buildCommomTextFormField({
+    required String title,
+    required String hintText,
+    TextEditingController? controller,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+    void Function(String)? onChanged,
+    void Function()? onTap,
+    bool readOnly = false,
+  }) {
+    final ThemeData theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    return CommmomTextFormField(
+      onTap: onTap,
+      onChanged: onChanged,
+      keyboardType: keyboardType,
+      controller: controller,
+      inputFormatters: inputFormatters,
+      title: title,
+      hintText: hintText,
+      readOnly: readOnly,
+      titleStyle: textTheme.headline4!.copyWith(
+          fontWeight: FontWeight.w500,
+          color: theme.buttonTheme.colorScheme!.background),
+      inputStyle: textTheme.bodyText1!
+          .copyWith(color: colorScheme.secondary.withOpacity(0.60)),
+      hintStyle: textTheme.bodyText1!
+          .copyWith(color: colorScheme.secondary.withOpacity(0.5)),
+      underlineColor: colorScheme.secondary.withOpacity(0.73),
+    );
   }
 }

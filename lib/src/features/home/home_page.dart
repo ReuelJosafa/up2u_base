@@ -5,7 +5,7 @@ import 'package:up2u_base/src/features/events_details/events_detail_page.dart';
 import 'package:up2u_base/src/features/profile/profile_page.dart';
 
 import '../../shared/components/custom_app_bar_widget.dart';
-import '../../shared/components/custom_outline_input_text_widget.dart';
+import '../../shared/components/custom_outline_search_widget.dart';
 import '../../shared/components/events_widget.dart';
 import '../../shared/components/text_underlined_button_widget.dart';
 import '../../shared/constants/constant_app_images.dart';
@@ -190,9 +190,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Expanded(
-            child: CustomOutlineInputText(),
-          ),
+          const Expanded(child: CustomOutlineSearch()),
           _filterPopUpMenu(
             icon: SvgPicture.asset(ConstantAppImages.filterAlt),
           )
@@ -348,7 +346,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             icon: SvgPicture.asset(ConstantAppImages.user,
                 fit: BoxFit.scaleDown,
                 color: _bottomNavbarIndex != 1 ? theme.primaryColor : null),
-            title: 'Conta'),
+            title: 'Opções'),
       ],
     );
   }

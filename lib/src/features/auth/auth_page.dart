@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -41,11 +38,12 @@ class _AuthPageState extends State<AuthPage> {
   void _forgetPassword() {}
 
   void _login() {
+    bool isAnAdministrator = emailController.text == 'admin';
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => HomePage(
-                isAnAdministrator: _rememberMe,
+                isAnAdministrator: isAnAdministrator,
               )),
     );
   }

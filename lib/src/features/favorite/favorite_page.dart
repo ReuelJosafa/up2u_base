@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../shared/components/custom_app_bar_widget.dart';
-import '../../shared/components/custom_outline_input_text_widget.dart';
+import '../../shared/components/custom_outline_search_widget.dart';
 import '../../shared/components/events_widget.dart';
+import '../../shared/utils/components_utils.dart';
 
 class FavoritePage extends StatefulWidget {
   const FavoritePage({Key? key}) : super(key: key);
@@ -33,7 +34,10 @@ class _FavoritePageState extends State<FavoritePage> {
       bottomRightRadius: 30,
       height: 151,
       child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16,),
+        padding: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+        ),
         child: SafeArea(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,10 +46,7 @@ class _FavoritePageState extends State<FavoritePage> {
                   padding: const EdgeInsets.only(top: 16),
                   child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: const Icon(Icons.arrow_back_ios_new_outlined),
-                      ),
+                      ComponentsUtils.buildArrowBack(context),
                       const SizedBox(width: 16),
                       Text(
                         'Favoritos',
@@ -59,7 +60,7 @@ class _FavoritePageState extends State<FavoritePage> {
                 ),
                 const Padding(
                   padding: EdgeInsets.only(left: 18, bottom: 16, right: 8),
-                  child: CustomOutlineInputText(),
+                  child: CustomOutlineSearch(),
                 )
               ]),
         ),

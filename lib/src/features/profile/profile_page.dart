@@ -51,18 +51,18 @@ class _ProfilePageState extends State<ProfilePage> {
                 CustomButton(
                   title: 'Promoções',
                   onTap: () => _navigateTo(const PromotionsPage()),
+                )
+              else
+                CustomButton(
+                  title: 'Favoritos',
+                  onTap: () => _navigateTo(const FavoritePage()),
                 ),
               if (widget.isAnAdministrator)
                 CustomButton(
                   title: 'Usuários',
                   onTap: () => _navigateTo(const UsersPage()),
-                ),
-              if (!widget.isAnAdministrator)
-                CustomButton(
-                  title: 'Favoritos',
-                  onTap: () => _navigateTo(const FavoritePage()),
-                ),
-              if (!widget.isAnAdministrator)
+                )
+              else
                 CustomButton(
                   title: 'Sobre',
                   onTap: () {},

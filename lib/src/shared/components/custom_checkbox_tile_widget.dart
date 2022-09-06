@@ -21,7 +21,7 @@ class CustomCheckboxTile extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomCheckbox(
-          value: true,
+          value: value,
           onChanged: onChanged,
         ),
         Text(

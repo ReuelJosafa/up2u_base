@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../shared/components/commom_app_bar_widget.dart';
+import '../../shared/components/custom_add_elevated_button_widget.dart';
 import '../../shared/components/custom_checkbox_tile_widget.dart';
 import '../../shared/components/custom_container_action_widget.dart';
 import '../../shared/components/custom_expansion_tile_wiget.dart';
@@ -89,24 +90,7 @@ class _UsersPageState extends State<UsersPage> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ElevatedButton(
-                      onPressed: _addUser,
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        textStyle: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(fontWeight: FontWeight.w300),
-                        fixedSize: const Size(double.maxFinite, 37),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text('Adicionar'),
-                    ),
-                  ),
+                  CustomAddElevatedButton(onPressed: _addUser),
                 ],
               ),
             ),

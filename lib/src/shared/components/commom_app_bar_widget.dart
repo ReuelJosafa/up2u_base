@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/components_utils.dart';
+
 class CommomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String subtitle;
@@ -40,12 +42,7 @@ class CommomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(Icons.arrow_back_ios_new_outlined),
-                    ),
+                    ComponentsUtils.buildArrowBack(context),
                     const SizedBox(width: 32),
                     Text(
                       title,

@@ -70,7 +70,7 @@ class _UseTermsPageState extends State<UseTermsPage> {
       centerTitle: true,
       elevation: 0,
       bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(4),
+          preferredSize: Size.fromHeight(1),
           child: Divider(
               thickness: 1, color: Colors.white, endIndent: 26, indent: 26)),
     );

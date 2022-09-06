@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:up2u_base/src/shared/components/text_underlined_button_widget.dart';
 import '../../../../shared/constants/constant_app_images.dart';
 import '../edit_menu/edit_menu_page.dart';
+import 'components/custom_card_menu_widget.dart';
+import 'model/menu.dart';
 
 class MenuSubpage extends StatefulWidget {
   final bool isAnAdministrator;
@@ -13,7 +15,7 @@ class MenuSubpage extends StatefulWidget {
 }
 
 class _MenuSubpageState extends State<MenuSubpage> {
-  List<String> menuImagens = [
+  final menuImagens = [
     ConstantAppImages.menu1,
     ConstantAppImages.menu2,
     ConstantAppImages.menu3,
@@ -21,6 +23,32 @@ class _MenuSubpageState extends State<MenuSubpage> {
     ConstantAppImages.menu5,
     ConstantAppImages.menu6,
   ];
+
+  final menuTitles = [
+    'Bebidas',
+    'Entradas',
+    'Lorem inpsu',
+    'Lorem inpsu',
+    'Lorem inpsu',
+    'Lorem inpsu',
+  ];
+
+  late List<Menu> _menus;
+  @override
+  void initState() {
+    super.initState();
+
+    _menus = [
+      for (var menuTitle in menuTitles)
+        Menu(
+            title: menuTitle,
+            list: List.generate(20, (index) => 'Lorem $menuTitle $index'))
+    ];
+  }
+
+  void _onEditMenu() {
+    // TODO: implementar ação ao pressionar o botão para alterar o cardápio.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,50 +66,24 @@ class _MenuSubpageState extends State<MenuSubpage> {
               ),
               itemCount: 6,
               itemBuilder: (BuildContext ctx, index) {
-                return _buildCustomCard(
-                    image: menuImagens[index], index: index);
+                return CustomCardMenu(
+                  image: menuImagens[index],
+                  title: menuTitles[index],
+                  onNavigator: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              EditMenuPage(menu: _menus[index]))),
+                );
               }),
         ),
         if (widget.isAnAdministrator)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 46),
             child: TextUnderlinedButton(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const EditMenuPage())),
-                title: 'Editar Cardápio'),
+                onTap: _onEditMenu, title: 'Editar Cardápio'),
           ),
       ],
-    );
-  }
-
-  Widget _buildCustomCard({required String image, required int index}) {
-    return Card(
-      elevation: 10,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8),
-        height: 110,
-        width: 116,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(image, height: 46),
-            Text(
-              'Lorems',
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.headline3!.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-            )
-          ],
-        ),
-      ),
     );
   }
 }

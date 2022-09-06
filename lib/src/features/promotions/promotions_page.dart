@@ -1,16 +1,13 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../shared/components/commom_app_bar_widget.dart';
+import '../../shared/components/commom_text_form_field_widget.dart';
+import '../../shared/components/custom_add_elevated_button_widget.dart';
 import '../../shared/components/custom_container_action_widget.dart';
 import '../../shared/components/custom_expansion_tile_wiget.dart';
-import '../../shared/components/commom_text_form_field_widget.dart';
-import '../../shared/utils/cupertino_utils.dart';
-import '../../shared/utils/date_time_utils.dart';
 import '../../shared/utils/components_utils.dart';
+import '../../shared/utils/date_time_utils.dart';
 
 class PromotionsPage extends StatefulWidget {
   const PromotionsPage({Key? key}) : super(key: key);
@@ -120,24 +117,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                       onTap: _onChooseData,
                       title: 'Data',
                       hintText: 'Lorem ipsum exemplo'),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ElevatedButton(
-                      onPressed: _addPromotion,
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        textStyle: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(fontWeight: FontWeight.w300),
-                        fixedSize: const Size(double.maxFinite, 37),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text('Adicionar'),
-                    ),
-                  ),
+                  CustomAddElevatedButton(onPressed: _addPromotion),
                 ],
               ),
             ),
