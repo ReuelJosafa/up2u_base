@@ -20,6 +20,7 @@ class CommmomTextFormField extends StatelessWidget {
   final void Function(String)? onFieldSubmitted;
   final TextInputAction textInputAction;
   final FocusNode? focusNode;
+  final String? Function(String?)? validator;
   const CommmomTextFormField(
       {Key? key,
       required this.title,
@@ -39,7 +40,8 @@ class CommmomTextFormField extends StatelessWidget {
       this.textInputAction = TextInputAction.next,
       this.focusNode,
       this.bottomPadding = 12,
-      this.topPadding = 12})
+      this.topPadding = 12,
+      this.validator})
       : super(key: key);
 
   @override
@@ -61,6 +63,7 @@ class CommmomTextFormField extends StatelessWidget {
             controller: controller,
             onTap: onTap,
             onChanged: onChanged,
+            validator: validator,
             onFieldSubmitted: onFieldSubmitted,
             focusNode: focusNode,
             keyboardType: keyboardType,

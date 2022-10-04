@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomCardMenu extends StatelessWidget {
   final String image;
   final String title;
-  final void Function() onNavigator;
+  final void Function()? onNavigator;
   const CustomCardMenu(
       {Key? key,
       required this.image,
@@ -21,9 +21,9 @@ class CustomCardMenu extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 8),
-          height: 110,
-          width: 116,
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          height: 104,
+          width: 100,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

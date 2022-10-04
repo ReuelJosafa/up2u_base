@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:up2u_base/src/shared/components/text_underlined_button_widget.dart';
-import '../../../../shared/constants/constant_app_images.dart';
+import '../../../../shared/constants/app_images.dart';
 import '../edit_menu/edit_menu_page.dart';
 import 'components/custom_card_menu_widget.dart';
 import 'model/menu.dart';
@@ -16,12 +16,12 @@ class MenuSubpage extends StatefulWidget {
 
 class _MenuSubpageState extends State<MenuSubpage> {
   final menuImagens = [
-    ConstantAppImages.menu1,
-    ConstantAppImages.menu2,
-    ConstantAppImages.menu3,
-    ConstantAppImages.menu4,
-    ConstantAppImages.menu5,
-    ConstantAppImages.menu6,
+    AppImages.menu1,
+    AppImages.menu2,
+    AppImages.menu3,
+    AppImages.menu4,
+    AppImages.menu5,
+    AppImages.menu6,
   ];
 
   final menuTitles = [
@@ -53,9 +53,32 @@ class _MenuSubpageState extends State<MenuSubpage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      // crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 22),
+            child: Wrap(
+              runSpacing: 4,
+              spacing: 4,
+              children: [
+                for (int index = 0; index < menuTitles.length; index++)
+                  CustomCardMenu(
+                    image: menuImagens[index],
+                    title: menuTitles[index],
+                    onNavigator: widget.isAnAdministrator
+                        ? () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EditMenuPage(menu: _menus[index])))
+                        : null,
+                  )
+              ],
+            ),
+          ),
+        ),
+        /* Expanded(
           child: GridView.builder(
               padding: const EdgeInsets.only(
                   left: 64, right: 64, top: 32, bottom: 16),
@@ -69,19 +92,24 @@ class _MenuSubpageState extends State<MenuSubpage> {
                 return CustomCardMenu(
                   image: menuImagens[index],
                   title: menuTitles[index],
-                  onNavigator: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              EditMenuPage(menu: _menus[index]))),
+                  onNavigator: widget.isAnAdministrator
+                      ? () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  EditMenuPage(menu: _menus[index])))
+                      : null,
                 );
               }),
-        ),
+        ), */
         if (widget.isAnAdministrator)
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 46),
-            child: TextUnderlinedButton(
-                onTap: _onEditMenu, title: 'Editar Cardápio'),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: TextUnderlinedButton(
+                  onTap: _onEditMenu, title: 'Editar Cardápio'),
+            ),
           ),
       ],
     );

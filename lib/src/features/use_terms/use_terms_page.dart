@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../shared/components/custom_elevated_button_widget.dart';
-import '../../shared/constants/constant_app_images.dart';
+import '../../shared/constants/app_images.dart';
 
 class UseTermsPage extends StatefulWidget {
   final bool isOnlyVisualization;
@@ -20,7 +20,7 @@ class _UseTermsPageState extends State<UseTermsPage> {
       body: Stack(
         alignment: AlignmentDirectional.center,
         children: [
-          Image.asset(ConstantAppImages.background, height: 352),
+          Image.asset(AppImages.background, height: 352),
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(

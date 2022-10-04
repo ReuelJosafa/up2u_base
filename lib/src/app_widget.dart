@@ -1,26 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 import 'features/auth/auth_page.dart';
+import 'shared/controllers/local_of_events_list_controller.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.dark,
-      title: 'Flutter Demo',
-      theme: _buildTheme(),
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (context) => LocalOfEventListController())
       ],
-      supportedLocales: const [
-        Locale('pt', 'BR'),
-      ],
-      home: const AuthPage(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        themeMode: ThemeMode.dark,
+        title: 'Flutter Demo',
+        theme: _buildTheme(),
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('pt', 'BR'),
+        ],
+        home: const AuthPage(),
+      ),
     );
   }
 
@@ -63,7 +72,7 @@ class MyApp extends StatelessWidget {
       scrollbarTheme: ScrollbarThemeData(
         interactive: true,
         crossAxisMargin: -3,
-        mainAxisMargin: 16,
+        mainAxisMargin: 22,
         thickness: MaterialStateProperty.all(8),
         thumbColor: MaterialStateProperty.all(const Color(0xFFD3A62A)),
         trackColor: MaterialStateProperty.all(const Color(0xFFEBECEE)),

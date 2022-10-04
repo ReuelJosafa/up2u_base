@@ -34,13 +34,7 @@ class _InicialSubpageState extends State<InicialSubpage> {
   TimeOfDay _startTime = TimeOfDay.now();
   TimeOfDay _endTime = TimeOfDay.now();
   DateTime _date = DateTime.now();
-
-  @override
-  void initState() {
-    super.initState();
-
-    dateController.text = '';
-  }
+  late PageController _pageController;
 
   Future<void> _onChooseData() async {
     await DateTimeUtils.chooseData(
@@ -85,17 +79,31 @@ class _InicialSubpageState extends State<InicialSubpage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    _pageController = PageController(initialPage: 0, viewportFraction: 0.93);
+
+    dateController.text = '';
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 32, top: 16),
+      padding: const EdgeInsets.only(bottom: 16, top: 16),
       child: Scrollbar(
-        controller: scrollController,
+        controller: _pageController,
         thumbVisibility: true,
         trackVisibility: true,
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          controller: scrollController,
-          scrollDirection: Axis.horizontal,
+        child: PageView.builder(
+          controller: _pageController,
+          allowImplicitScrolling: true,
           itemCount: 10,
           itemBuilder: (context, index) {
             return _buildPartyInfoContainer();
@@ -110,7 +118,7 @@ class _InicialSubpageState extends State<InicialSubpage> {
       decoration: BoxDecoration(
           color: Theme.of(context).primaryColor.withOpacity(0.3),
           borderRadius: const BorderRadius.all(Radius.circular(10))),
-      margin: const EdgeInsets.fromLTRB(8, 8, 8, 16),
+      margin: const EdgeInsets.fromLTRB(8, 0, 8, 22),
       padding: const EdgeInsets.all(16),
       height: 296,
       width: 333,

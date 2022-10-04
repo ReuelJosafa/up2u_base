@@ -83,7 +83,7 @@ class DateTimeUtils {
       CupertinoUtils.showModalDialog(
           context,
           CupertinoDatePicker(
-            minimumYear: initialDate.year - 1,
+            minimumYear: DateTime.now().year - 1,
             initialDateTime: initialDate,
             mode: CupertinoDatePickerMode.date,
             use24hFormat: true,

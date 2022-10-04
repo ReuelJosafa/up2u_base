@@ -1,4 +1,4 @@
-class ConstantAppImages {
+class AppImages {
   static const String background = 'images/LogoUP2U-NEGATIVOEDB-fundo.png';
   static const String logo = 'images/LogoUP2U-NEGATIVOEDB.png';
   static const String camera = 'images/camera.svg';

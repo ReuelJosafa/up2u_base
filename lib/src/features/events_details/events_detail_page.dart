@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../shared/components/alert_dialog_action_button_widget.dart';
@@ -8,7 +9,7 @@ import '../../shared/components/custom_app_bar_widget.dart';
 import '../../shared/components/custom_close_button_widget.dart';
 import '../../shared/components/commom_text_form_field_widget.dart';
 import '../../shared/components/text_underlined_button_widget.dart';
-import '../../shared/constants/constant_app_images.dart';
+import '../../shared/constants/app_images.dart';
 import '../../shared/utils/components_utils.dart';
 import 'submodules/about/about_subpage.dart';
 import 'submodules/initial/initial_subpage.dart';
@@ -43,9 +44,10 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
   ];
 
   int currentImageindex = 0;
-  String partyName = 'Festa lorem ipsum';
+  String partyName = 'Festa lorem ipsum f f ';
   String address = 'Rua exemplo - SP';
   String logoUrl = 'images/party_logo.png';
+  String _wifiPassword = 'LOREMIPSUM123';
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +72,9 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
 
   PreferredSizeWidget _buildAppBar() {
     return CustomAppBar(
-      bottomRightRadius: 30,
-      bottomLeftRadius: 30,
-      height: 357,
+      /*  bottomRightRadius: 30,
+      bottomLeftRadius: 30, */
+      height: widget.isAnAdministrator ? 330 : 357,
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,13 +94,18 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                     right: 16,
                     child: GestureDetector(
                       onTap: _showChagePhotosDialog,
-                      child: SvgPicture.asset(ConstantAppImages.editAlt),
+                      child: SvgPicture.asset(
+                        AppImages.editAlt,
+                        height: 28,
+                        width: 28,
+                      ),
                     ),
                   ),
               ],
             ),
             ListTile(
               minVerticalPadding: 15,
+              horizontalTitleGap: 8,
               leading: Stack(
                 alignment: AlignmentDirectional.center,
                 children: [
@@ -119,38 +126,63 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                     ),
                   ),
                   if (widget.isAnAdministrator)
-                    SvgPicture.asset(ConstantAppImages.camera,
-                        fit: BoxFit.scaleDown)
+                    SvgPicture.asset(AppImages.camera, fit: BoxFit.scaleDown)
                 ],
               ),
-              title: Text(partyName),
+              title:
+                  Text(partyName, maxLines: 2, overflow: TextOverflow.ellipsis),
               subtitle: Text(address),
+              trailing: widget.isAnAdministrator
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildCustomButton(
+                            horizontalPadding: false,
+                            onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PaymentMethodsPage(
+                                          isAnAdministrator:
+                                              widget.isAnAdministrator)),
+                                ),
+                            child: SvgPicture.asset(AppImages.creditCard)),
+                        const SizedBox(width: 8),
+                        _buildCustomButton(
+                            horizontalPadding: false,
+                            onPressed: _showWifiAlertDialog,
+                            child: const Icon(Icons.wifi)),
+                      ],
+                    )
+                  : null,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // TODO: implementar ação conforme orientação no Trello.
-                  Expanded(
-                    child: _buildCustomElevatedButton(
-                        onPressed: () {}, child: const Text('Ir para o local')),
-                  ),
-                  _buildCustomElevatedButton(
-                      onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PaymentMethodsPage(
-                                    isAnAdministrator:
-                                        widget.isAnAdministrator)),
-                          ),
-                      child: SvgPicture.asset(ConstantAppImages.creditCard)),
-                  _buildCustomElevatedButton(
-                      onPressed: _showWifiAlertDialog,
-                      child: const Icon(Icons.wifi)),
-                ],
+            if (!widget.isAnAdministrator)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // TODO: implementar ação conforme orientação no Trello.
+
+                    Expanded(
+                      child: _buildCustomButton(
+                          onPressed: () {},
+                          child: const Text('Ir para o local')),
+                    ),
+                    _buildCustomButton(
+                        onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PaymentMethodsPage(
+                                      isAnAdministrator:
+                                          widget.isAnAdministrator)),
+                            ),
+                        child: SvgPicture.asset(AppImages.creditCard)),
+                    _buildCustomButton(
+                        onPressed: _showWifiAlertDialog,
+                        child: const Icon(Icons.wifi)),
+                  ],
+                ),
               ),
-            ),
             TabBar(
               labelPadding: const EdgeInsets.symmetric(horizontal: 0),
               indicatorColor: Colors.white,
@@ -283,8 +315,8 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
             right: 8,
             child: InkWell(
                 onTap: () {},
-                child: SvgPicture.asset(ConstantAppImages.delete,
-                    fit: BoxFit.scaleDown)))
+                child:
+                    SvgPicture.asset(AppImages.delete, fit: BoxFit.scaleDown)))
       ],
     );
   }
@@ -327,18 +359,28 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                       fontWeight: FontWeight.w300, color: Colors.black),
                 ),
                 const SizedBox(height: 32),
-                Container(
-                  alignment: Alignment.center,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: buttonColorScheme!.background),
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      color: buttonColorScheme.secondary),
-                  child: Text(
-                    'LOREMIPSUM123',
-                    style: Theme.of(context).textTheme.headline3!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: buttonColorScheme.background),
+                GestureDetector(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: _wifiPassword));
+                    Navigator.pop(context);
+                    ComponentsUtils.showSnackBar(context,
+                        text: 'Senha do Wi-Fi copiada');
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: buttonColorScheme!.background),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                        color: buttonColorScheme.secondary),
+                    child: Text(
+                      _wifiPassword,
+                      style: Theme.of(context).textTheme.headline3!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: buttonColorScheme.background),
+                    ),
                   ),
                 ),
               ],
@@ -440,22 +482,27 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
         }));
   }
 
-  Widget _buildCustomElevatedButton(
-      {required void Function()? onPressed, required Widget child}) {
+  Widget _buildCustomButton(
+      {required void Function()? onPressed,
+      required Widget child,
+      bool horizontalPadding = true}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            primary: Theme.of(context).colorScheme.secondary,
-            elevation: 0,
-            textStyle: Theme.of(context).textTheme.button,
-            fixedSize: const Size.fromHeight(37),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(90),
-            ),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding ? 4 : 0),
+      child: Material(
+        textStyle: Theme.of(context).textTheme.button!.copyWith(),
+        borderRadius: const BorderRadius.all(Radius.circular(90)),
+        clipBehavior: Clip.antiAlias,
+        color: Theme.of(context).colorScheme.secondary,
+        child: InkWell(
+          onTap: onPressed,
+          splashColor: Colors.white.withOpacity(0.3),
+          child: Ink(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            height: 37,
+            child: Center(child: child),
           ),
-          child: child),
+        ),
+      ),
     );
   }
 }

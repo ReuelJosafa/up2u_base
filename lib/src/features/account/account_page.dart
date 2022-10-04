@@ -5,7 +5,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../shared/components/custom_app_bar_widget.dart';
 import '../../shared/components/custom_elevated_button_widget.dart';
 import '../../shared/components/commom_text_form_field_widget.dart';
-import '../../shared/constants/constant_app_images.dart';
+import '../../shared/constants/app_images.dart';
 import '../../shared/utils/components_utils.dart';
 
 class AccountPage extends StatefulWidget {
@@ -88,7 +88,7 @@ class _AccountPageState extends State<AccountPage> {
 
   PreferredSizeWidget _buildAppBar() {
     return CustomAppBar(
-        bottomRightRadius: 30,
+        // bottomRightRadius: 30,
         height: 255,
         child: Padding(
             padding: const EdgeInsets.only(left: 16, right: 30),
@@ -103,19 +103,22 @@ class _AccountPageState extends State<AccountPage> {
                       child: Material(
                           borderRadius: BorderRadius.circular(62),
                           elevation: 4,
+                          color: Colors.transparent,
+                          borderOnForeground: false,
                           //TODO: Substituir por imagem do usuário e usar NewtworkImage.
                           child: CircleAvatar(
                               radius: 62,
+                              backgroundColor: Colors.white,
                               backgroundImage: const AssetImage(
                                   'images/profile_picture.jpeg'),
                               child: Container(
                                 width: double.infinity,
                                 height: double.infinity,
                                 decoration: BoxDecoration(
-                                    color: Colors.black26,
+                                    color: Colors.black.withOpacity(0.4),
                                     borderRadius: BorderRadius.circular(62)),
                                 child: SvgPicture.asset(
-                                    ConstantAppImages.editPhoto,
+                                    AppImages.editPhoto,
                                     fit: BoxFit.scaleDown),
                               ))),
                     ),

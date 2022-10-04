@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../shared/components/custom_elevated_button_widget.dart';
-import '../../shared/constants/constant_app_images.dart';
+import '../../shared/constants/app_images.dart';
 import '../../shared/utils/components_utils.dart';
 import '../home/home_page.dart';
 import '../register/register_page.dart';
@@ -72,7 +72,7 @@ class _AuthPageState extends State<AuthPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 8),
-            Image.asset(ConstantAppImages.logo, height: 218),
+            Image.asset(AppImages.logo, height: 218),
             Form(
                 key: formKey,
                 child: Column(
@@ -90,7 +90,7 @@ class _AuthPageState extends State<AuthPage> {
                                 color:
                                     Theme.of(context).colorScheme.onSecondary,
                                 width: 1)),
-                        prefixIcon: SvgPicture.asset(ConstantAppImages.person,
+                        prefixIcon: SvgPicture.asset(AppImages.person,
                             fit: BoxFit.none),
                         hintText: 'E-mail',
                       ),
@@ -109,7 +109,7 @@ class _AuthPageState extends State<AuthPage> {
                                 color:
                                     Theme.of(context).colorScheme.onSecondary,
                                 width: 1)),
-                        prefixIcon: SvgPicture.asset(ConstantAppImages.lock,
+                        prefixIcon: SvgPicture.asset(AppImages.lock,
                             fit: BoxFit.none),
                         suffixIcon: IconButton(
                             onPressed: _changePasswordVisibily,
@@ -150,11 +150,11 @@ class _AuthPageState extends State<AuthPage> {
                 )),
             const SizedBox(height: 20),
             SocialMidiaButton(
-                icon: SvgPicture.asset(ConstantAppImages.google),
+                icon: SvgPicture.asset(AppImages.google),
                 text: 'Efetuar login com o Gmail',
                 onTap: _loginWithGmail),
             SocialMidiaButton(
-                icon: SvgPicture.asset(ConstantAppImages.facebook),
+                icon: SvgPicture.asset(AppImages.facebook),
                 text: 'Efetuar login com o Facebook',
                 onTap: _loginWithFacebook),
             SocialMidiaButton(

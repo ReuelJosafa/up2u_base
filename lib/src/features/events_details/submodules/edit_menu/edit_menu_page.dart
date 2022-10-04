@@ -6,7 +6,7 @@ import 'package:up2u_base/src/shared/components/commom_app_bar_widget.dart';
 import '../../../../shared/components/alert_dialog_action_button_widget.dart';
 import '../../../../shared/components/custom_expansion_tile_wiget.dart';
 import '../../../../shared/components/commom_text_form_field_widget.dart';
-import '../../../../shared/constants/constant_app_images.dart';
+import '../../../../shared/constants/app_images.dart';
 
 class EditMenuPage extends StatefulWidget {
   final Menu menu;
@@ -101,7 +101,7 @@ class _EditMenuPageState extends State<EditMenuPage> {
           GestureDetector(
               onTap: () => _showCommomDialog(
                   title: title, actionType: ActionType.delete),
-              child: SvgPicture.asset(ConstantAppImages.deleteAlt,
+              child: SvgPicture.asset(AppImages.deleteAlt,
                   fit: BoxFit.scaleDown)),
         ],
       ),

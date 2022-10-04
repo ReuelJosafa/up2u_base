@@ -11,26 +11,35 @@ class UseTermsCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+    return Stack(
+      alignment: AlignmentDirectional.centerStart,
       children: [
-        CustomCheckbox(
-          value: checkboxValue,
-          onChanged: (value) {},
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CustomCheckbox(
+              value: checkboxValue,
+              onChanged: (value) {},
+            ),
+            const SizedBox(width: 14),
+            Text('Aceitar os  ',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1!
+                    .copyWith(fontWeight: FontWeight.w500)),
+            Text('Termos de uso',
+                style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.underline,
+                    ))
+          ],
         ),
-        const SizedBox(width: 14),
-        Text('Aceitar os',
-            style: Theme.of(context)
-                .textTheme
-                .bodyText1!
-                .copyWith(fontWeight: FontWeight.w500)),
-        TextButton(
-          onPressed: onPressed,
-          child: Text('Termos de uso',
-              style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    decoration: TextDecoration.underline,
-                  )),
+        InkWell(
+          onTap: onPressed,
+          child: const SizedBox(
+            width: double.infinity,
+            height: 35,
+          ),
         )
       ],
     );

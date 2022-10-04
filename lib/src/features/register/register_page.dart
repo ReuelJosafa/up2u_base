@@ -4,7 +4,7 @@ import 'package:up2u_base/src/features/use_terms/use_terms_page.dart';
 
 import '../../shared/components/commom_text_form_field_widget.dart';
 import '../../shared/components/custom_elevated_button_widget.dart';
-import '../../shared/constants/constant_app_images.dart';
+import '../../shared/constants/app_images.dart';
 import 'components/use_terms_checkbox_widget.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -48,6 +48,20 @@ class _RegisterPageState extends State<RegisterPage> {
       type: MaskAutoCompletionType.lazy);
 
   @override
+  void dispose() {
+    super.dispose();
+    userController.dispose();
+    emailController.dispose();
+    phoneNumberController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    emailFocus.dispose();
+    phoneFocus.dispose();
+    passwordFocus.dispose();
+    passwordConfirmationFocus.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -61,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Stack(
         alignment: AlignmentDirectional.center,
         children: [
-          Image.asset(ConstantAppImages.background, height: 352),
+          Image.asset(AppImages.background, height: 352),
           Align(
             alignment: Alignment.center,
             child: SingleChildScrollView(
@@ -79,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     const SizedBox(height: 32),
                     CommmomTextFormField(
                       controller: userController,
-                      title: 'Usuário',
+                      title: 'Nome completo',
                       titleStyle: Theme.of(context).textTheme.bodyText1,
                       hintText: 'Fulano de Tal',
                       inputStyle: Theme.of(context).textTheme.headline3,
@@ -144,7 +158,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         onPressed: _navigateToUseTerms,
                         checkboxValue: _areTermsAccept),
                     const SizedBox(height: 16),
-                    CustomElevatedButton(title: 'Cadastrar', onPressed: () {}),
+                    CustomElevatedButton(
+                        title: 'Cadastrar',
+                        onPressed: _areTermsAccept ? () {} : null),
                   ],
                 ),
               ),

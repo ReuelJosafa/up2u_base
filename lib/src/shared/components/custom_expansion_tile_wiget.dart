@@ -32,6 +32,7 @@ class CustomExpansionTile extends StatelessWidget {
         border: Border.all(color: Theme.of(context).primaryColor),
       ),
       child: ExpansionTile(
+        key: key,
         title: Text(
           title,
           maxLines: 2,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:up2u_base/src/features/users/controllers/add_user_controller.dart';
 
 import '../../shared/components/commom_app_bar_widget.dart';
 import '../../shared/components/custom_add_elevated_button_widget.dart';
@@ -16,9 +17,16 @@ class UsersPage extends StatefulWidget {
 
 class _UsersPageState extends State<UsersPage> {
   final formKey = GlobalKey<FormState>();
-  bool isExpanded = false;
+  final controller = AddUserController();
 
-  void _addUser() {}
+  void _onSubmit() {
+    bool isValidated = formKey.currentState?.validate() ?? false;
+    if (!isValidated) {
+      return;
+    }
+
+    controller.addUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,78 +41,108 @@ class _UsersPageState extends State<UsersPage> {
           children: [
             Form(
               key: formKey,
-              child: CustomExpansionTile(
-                title: 'Adicionar Usuário',
-                isExpanded: isExpanded,
-                onExpansionChanged: (value) {
-                  setState(() {
-                    isExpanded = value;
-                  });
-                },
-                children: [
-                  const CommmomTextFormField(
-                      title: 'Nome', hintText: 'Lorem ipsum Silva'),
-                  const CommmomTextFormField(
-                      title: 'Cargo', hintText: 'Lorem ipsum exemplo'),
-                  const CommmomTextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      title: 'E-mail',
-                      hintText: 'Fulano@gmail.com'),
-                  const CommmomTextFormField(
-                      keyboardType: TextInputType.visiblePassword,
-                      title: 'Senha',
-                      hintText: '***********'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomCheckboxTile(
-                            title: 'Card',
-                            value: false,
-                            onChanged: (value) {},
-                          ),
-                          CustomCheckboxTile(
-                            title: 'Listas',
-                            value: false,
-                            onChanged: (value) {},
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomCheckboxTile(
-                            title: 'Cardápio',
-                            value: false,
-                            onChanged: (value) {},
-                          ),
-                          CustomCheckboxTile(
-                            title: 'Edição de usuários',
-                            value: false,
-                            onChanged: (value) {},
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  CustomAddElevatedButton(onPressed: _addUser),
-                ],
-              ),
+              child: AnimatedBuilder(
+                  animation: controller,
+                  builder: (context, _) {
+                    return CustomExpansionTile(
+                      key: controller.expansionTileKey,
+                      title: 'Adicionar Usuário',
+                      isExpanded: controller.isExpanded,
+                      onExpansionChanged: (value) {
+                        controller.toggleExpanded();
+                      },
+                      children: [
+                        CommmomTextFormField(
+                            onChanged: controller.onChangeName,
+                            validator: controller.onValidator,
+                            title: 'Nome',
+                            hintText: 'Lorem ipsum Silva'),
+                        CommmomTextFormField(
+                            onChanged: controller.onChangeJob,
+                            validator: controller.onValidator,
+                            title: 'Cargo',
+                            hintText: 'Lorem ipsum exemplo'),
+                        CommmomTextFormField(
+                            onChanged: controller.onChangeEmail,
+                            validator: controller.onValidator,
+                            keyboardType: TextInputType.emailAddress,
+                            title: 'E-mail',
+                            hintText: 'Fulano@gmail.com'),
+                        CommmomTextFormField(
+                            onChanged: controller.onChangePassword,
+                            validator: controller.onValidator,
+                            keyboardType: TextInputType.visiblePassword,
+                            title: 'Senha',
+                            hintText: '***********'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomCheckboxTile(
+                                  title: 'Card',
+                                  value: controller.canAccessCard,
+                                  onChanged: (value) {
+                                    controller.toggleCardAccess();
+                                  },
+                                ),
+                                CustomCheckboxTile(
+                                  title: 'Listas',
+                                  value: controller.canAccessLists,
+                                  onChanged: (value) {
+                                    controller.toggleListsAccess();
+                                  },
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomCheckboxTile(
+                                  title: 'Cardápio',
+                                  value: controller.canAccessMenu,
+                                  onChanged: (value) {
+                                    controller.toggleMenuAccess();
+                                  },
+                                ),
+                                CustomCheckboxTile(
+                                  title: 'Edição de usuários',
+                                  value: controller.canEditUser,
+                                  onChanged: (value) {
+                                    controller.toggleEditUser();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        CustomAddElevatedButton(onPressed: () {
+                          _onSubmit();
+                        }),
+                      ],
+                    );
+                  }),
             ),
-            ListView.builder(
-                shrinkWrap: true,
-                physics:
-                    const ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return CustomContainerAction(
-                      title: 'André Mineiro $index',
-                      subtitle: 'Barman',
-                      thirdtitle: 'Permissões: Cardápio',
-                      trailing: const Icon(Icons.arrow_forward_ios_rounded));
+            AnimatedBuilder(
+                animation: controller,
+                builder: (context, _) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const ScrollPhysics(
+                          parent: NeverScrollableScrollPhysics()),
+                      itemCount: controller.users.length,
+                      itemBuilder: (context, index) {
+                        final user = controller.users[index];
+                        return CustomContainerAction(
+                            title: user.name,
+                            subtitle: user.job,
+                            thirdtitle:
+                                'Permissões: ${user.permissionsAsString}',
+                            trailing:
+                                const Icon(Icons.arrow_forward_ios_rounded));
+                      });
                 }),
           ],
         ),

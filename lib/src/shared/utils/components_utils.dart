@@ -21,4 +21,20 @@ class ComponentsUtils {
       child: const Icon(Icons.arrow_back_ios_new_outlined),
     );
   }
+
+  static void showSnackBar(BuildContext context, {required String text}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          text,
+          style: const TextStyle(color: Colors.white),
+        ),
+        width: 344,
+        backgroundColor: Theme.of(context).primaryColor,
+        // margin: EdgeInsets.all(20),
+        behavior: SnackBarBehavior.floating,
+        elevation: 4,
+      ),
+    );
+  }
 }

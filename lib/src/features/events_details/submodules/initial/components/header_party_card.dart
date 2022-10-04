@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../../shared/constants/constant_app_images.dart';
+import '../../../../../shared/constants/app_images.dart';
 
 class HeaderPartyCard extends StatelessWidget {
   final bool isAnAdministrator;
@@ -54,9 +54,11 @@ class HeaderPartyCard extends StatelessWidget {
                         .copyWith(decoration: TextDecoration.underline)),
                 const SizedBox(width: 6),
                 SvgPicture.asset(
-                  ConstantAppImages.editAlt,
-                  fit: BoxFit.scaleDown,
+                  AppImages.editAlt,
+                  // fit: BoxFit.scaleDown,
                   color: Colors.white.withOpacity(0.56),
+                  height: 28,
+                  width: 28,
                 )
               ],
             ),

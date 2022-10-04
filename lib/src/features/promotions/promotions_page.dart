@@ -8,6 +8,7 @@ import '../../shared/components/custom_container_action_widget.dart';
 import '../../shared/components/custom_expansion_tile_wiget.dart';
 import '../../shared/utils/components_utils.dart';
 import '../../shared/utils/date_time_utils.dart';
+import 'controller/promotions_controller.dart';
 
 class PromotionsPage extends StatefulWidget {
   const PromotionsPage({Key? key}) : super(key: key);
@@ -22,26 +23,41 @@ class _PromotionsPageState extends State<PromotionsPage> {
   final dateController = TextEditingController();
   final controller = ScrollController();
   final formKey = GlobalKey<FormState>();
-  bool isExpanded = false;
-  TimeOfDay _startTime = TimeOfDay.now();
-  TimeOfDay _endTime = TimeOfDay.now();
-  DateTime _date = DateTime.now();
+  final promotionController = PromotionsController();
 
-  void _addPromotion() {}
+  void _onSubmit() {
+    bool isValidated = formKey.currentState?.validate() ?? false;
+    if (!isValidated) {
+      return;
+    }
+
+    promotionController.addPromotion();
+    _resetControllers();
+  }
+
+  void _resetControllers() {
+    startTimeController.text =
+        DateTimeUtils.toPtBrFormat(context, promotionController.startTime);
+    endTimeController.text =
+        DateTimeUtils.toPtBrFormat(context, promotionController.endTime);
+    String formattedDate =
+        DateFormat('dd/MM/yyyy').format(promotionController.date);
+    dateController.text = formattedDate;
+  }
 
   Future<void> _onChooseData() async {
     await DateTimeUtils.chooseData(
       context,
-      initialDate: _date,
+      initialDate: promotionController.date,
       onDateChanged: (newDate) {
         controller.animateTo(100,
             duration: const Duration(microseconds: 500), curve: Curves.easeIn);
 
-        _date = newDate;
-        String formattedDate = DateFormat('dd/MM/yyyy').format(_date);
-        setState(() {
-          dateController.text = formattedDate;
-        });
+        promotionController.date = newDate;
+        String formattedDate =
+            DateFormat('dd/MM/yyyy').format(promotionController.date);
+
+        dateController.text = formattedDate;
       },
     );
   }
@@ -49,13 +65,11 @@ class _PromotionsPageState extends State<PromotionsPage> {
   Future<void> _onChooseStartTime() async {
     await DateTimeUtils.chooseTime(
       context,
-      timeOfDay: _startTime,
+      timeOfDay: promotionController.startTime,
       onTimeChanged: (newTime) {
-        setState(() {
-          _startTime = newTime;
-          startTimeController.text =
-              DateTimeUtils.toPtBrFormat(context, _startTime);
-        });
+        promotionController.startTime = newTime;
+        startTimeController.text =
+            DateTimeUtils.toPtBrFormat(context, promotionController.startTime);
       },
     );
   }
@@ -63,15 +77,33 @@ class _PromotionsPageState extends State<PromotionsPage> {
   Future<void> _onChooseEndTime() async {
     await DateTimeUtils.chooseTime(
       context,
-      timeOfDay: _endTime,
+      timeOfDay: promotionController.endTime,
       onTimeChanged: (newTime) {
-        setState(() {
-          _endTime = newTime;
-          endTimeController.text =
-              DateTimeUtils.toPtBrFormat(context, _endTime);
-        });
+        promotionController.endTime = newTime;
+        endTimeController.text =
+            DateTimeUtils.toPtBrFormat(context, promotionController.endTime);
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        _resetControllers();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    startTimeController.dispose();
+    endTimeController.dispose();
+    dateController.dispose();
+    controller.dispose();
+    promotionController.dispose();
   }
 
   @override
@@ -88,55 +120,69 @@ class _PromotionsPageState extends State<PromotionsPage> {
           children: [
             Form(
               key: formKey,
-              child: CustomExpansionTile(
-                title: 'Adicionar Promoção',
-                isExpanded: isExpanded,
-                onExpansionChanged: (value) {
-                  setState(() {
-                    isExpanded = value;
-                  });
-                },
-                children: [
-                  const CommmomTextFormField(
-                      title: 'Nome', hintText: 'Lorem ipsum exemplo'),
-                  CommmomTextFormField(
-                      controller: startTimeController,
-                      readOnly: true,
-                      onTap: _onChooseStartTime,
-                      title: 'Início',
-                      hintText: '00h00'),
-                  CommmomTextFormField(
-                      controller: endTimeController,
-                      readOnly: true,
-                      onTap: _onChooseEndTime,
-                      title: 'Término',
-                      hintText: '00h00'),
-                  CommmomTextFormField(
-                      controller: dateController,
-                      readOnly: true,
-                      onTap: _onChooseData,
-                      title: 'Data',
-                      hintText: 'Lorem ipsum exemplo'),
-                  CustomAddElevatedButton(onPressed: _addPromotion),
-                ],
-              ),
+              child: AnimatedBuilder(
+                  animation: promotionController,
+                  builder: (context, _) {
+                    return CustomExpansionTile(
+                      key: promotionController.expansionTileKey,
+                      title: 'Adicionar Promoção',
+                      isExpanded: promotionController.isExpanded,
+                      onExpansionChanged: (_) {
+                        promotionController.toggleExpanded();
+                      },
+                      children: [
+                        CommmomTextFormField(
+                            validator: promotionController.onValidator,
+                            onChanged: promotionController.name,
+                            title: 'Nome',
+                            hintText: 'Lorem ipsum exemplo'),
+                        CommmomTextFormField(
+                            controller: startTimeController,
+                            readOnly: true,
+                            onTap: _onChooseStartTime,
+                            title: 'Início',
+                            hintText: '00h00'),
+                        CommmomTextFormField(
+                            controller: endTimeController,
+                            readOnly: true,
+                            onTap: _onChooseEndTime,
+                            title: 'Término',
+                            hintText: '00h00'),
+                        CommmomTextFormField(
+                            controller: dateController,
+                            readOnly: true,
+                            onTap: _onChooseData,
+                            title: 'Data',
+                            hintText: 'Lorem ipsum exemplo'),
+                        CustomAddElevatedButton(onPressed: _onSubmit),
+                      ],
+                    );
+                  }),
             ),
-            ListView.builder(
-                controller: controller,
-                shrinkWrap: true,
-                physics:
-                    const ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return CustomContainerAction(
-                      title: 'Promoção $index',
-                      subtitle: '27/02 das 19h á 02h',
-                      thirdtitle: 'Ativado',
-                      trailing: ComponentsUtils.buildSwitch(
-                        context,
-                        value: false,
-                        onChanged: (value) {},
-                      ));
+            AnimatedBuilder(
+                animation: promotionController,
+                builder: (context, _) {
+                  return ListView.builder(
+                      controller: controller,
+                      shrinkWrap: true,
+                      physics: const ScrollPhysics(
+                          parent: NeverScrollableScrollPhysics()),
+                      itemCount: promotionController.promotions.length,
+                      itemBuilder: (context, index) {
+                        final promotion = promotionController.promotions[index];
+                        return CustomContainerAction(
+                            title: promotion.title,
+                            subtitle: promotion.dateTimeAsString,
+                            thirdtitle: promotion.activatedAsString,
+                            trailing: ComponentsUtils.buildSwitch(
+                              context,
+                              value: promotion.activated,
+                              onChanged: (_) {
+                                promotionController
+                                    .toggleActivatedOf(promotion.id);
+                              },
+                            ));
+                      });
                 }),
           ],
         ),

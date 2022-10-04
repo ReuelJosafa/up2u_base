@@ -12,7 +12,8 @@ class CommomAppBar extends StatelessWidget implements PreferredSizeWidget {
       {Key? key,
       this.height = 130,
       this.bottomLeftRadius = 0.0,
-      this.bottomRightRadius = 30,
+      // this.bottomRightRadius = 30,
+      this.bottomRightRadius = 0.0,
       required this.title,
       required this.subtitle})
       : super(key: key);

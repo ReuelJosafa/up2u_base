@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../shared/components/alert_dialog_action_button_widget.dart';
 import '../../../../shared/components/custom_checkbox_tile_widget.dart';
+import 'components/outline_search_field_widget.dart';
 import 'models/person_presence.dart';
 
 class AttandenceListSubpage extends StatefulWidget {
@@ -13,6 +14,7 @@ class AttandenceListSubpage extends StatefulWidget {
 
 class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
   final date = '15/06';
+  String _filter = '';
 
   List<PersonPresence> presenceList = List.generate(
       30,
@@ -21,6 +23,14 @@ class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
           present: index != 1,
           email: 'Loremipsum$index@gmail.com',
           phone: '00000-0000'));
+  List<PersonPresence> get presenceListFiltered =>
+      presenceList.where((person) => person.name.contains(_filter)).toList();
+
+  void onChangeFilter(String value) {
+    setState(() {
+      _filter = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,29 +39,34 @@ class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 22, bottom: 16, top: 28),
-          child: Text(
-            date,
-            style: Theme.of(context)
-                .textTheme
-                .bodyText1!
-                .copyWith(fontWeight: FontWeight.w300),
+          child: Row(
+            children: [
+              Text(
+                date,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1!
+                    .copyWith(fontWeight: FontWeight.w300),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                  child:
+                      OutlineSearchField(context, onChanged: onChangeFilter)),
+              const SizedBox(width: 22),
+            ],
           ),
         ),
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            itemCount: presenceList.length,
+            itemCount: presenceListFiltered.length,
             itemBuilder: (context, index) {
               return _buildAttandanceListTile(
-                  name: presenceList[index].name,
-                  isPresent: presenceList[index].present,
+                  name: presenceListFiltered[index].name,
+                  isPresent: presenceListFiltered[index].present,
                   onTap: () => _editPreseceAlertDialog(
-                        presenceList[index],
-                        onChanged: () => setState(() {
-                          presenceList[index].present =
-                              !presenceList[index].present;
-                        }),
+                        presenceListFiltered[index],
                       ));
             },
           ),
@@ -96,8 +111,11 @@ class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
     );
   }
 
-  void _editPreseceAlertDialog(PersonPresence personPresence,
-      {void Function()? onChanged}) {
+  void _editPreseceAlertDialog(
+    PersonPresence personPresence,
+    /* {void Function()? onChanged} */
+  ) {
+    bool isPresent = personPresence.present;
     final colorScheme = Theme.of(context).colorScheme;
     showDialog(
         context: context,
@@ -121,16 +139,18 @@ class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
                   StatefulBuilder(
                     builder: (context, setState) {
                       return CustomCheckboxTile(
-                        title: personPresence.present ? 'Presente' : 'Ausente',
+                        title: isPresent ? 'Presente' : 'Ausente',
                         style: Theme.of(context)
                             .dialogTheme
                             .contentTextStyle!
                             .copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: const Color(0xFF696969)),
-                        value: personPresence.present,
+                        value: isPresent,
                         onChanged: (value) {
-                          setState(onChanged!);
+                          setState(() {
+                            isPresent = !isPresent;
+                          });
                         },
                       );
                     },
@@ -144,11 +164,20 @@ class _AttandenceListSubpageState extends State<AttandenceListSubpage> {
               //TODO: Revisar quando o usuário quiser salvar ou não a alteração.
 
               AlertDialogActionButton(
-                  onPressed: () => Navigator.pop(context),
-                  title: 'Voltar',
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  title: 'Cancelar',
                   outlineBorder: true),
               AlertDialogActionButton(
-                  onPressed: () {}, title: 'Salvar', filled: true),
+                  onPressed: () {
+                    setState(() {
+                      personPresence.present = isPresent;
+                    });
+                    Navigator.pop(context);
+                  },
+                  title: 'Salvar',
+                  filled: true),
             ],
           );
         }));
