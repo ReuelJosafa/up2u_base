@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../shared/components/alert_dialog_action_button_widget.dart';
 import '../../shared/components/custom_app_bar_widget.dart';
@@ -48,6 +50,45 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
   String address = 'Rua exemplo - SP';
   String logoUrl = 'images/party_logo.png';
   String _wifiPassword = 'LOREMIPSUM123';
+
+  void _open99taxis() {}
+
+  void _openMap() async {
+    String query = 'Praia de Ipanema - Ipanema, RJ';
+    late Uri mapsUri;
+    const latLgn = "0,0";
+
+    if (Platform.isAndroid) {
+      //TODO: Para mais detalhes de implementação no android
+      //https://developer.android.com/guide/components/intents-common#ViewMap
+      String? encodeQueryParameters(Map<String, String> params) {
+        return params.entries
+            .map((MapEntry<String, String> e) =>
+                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+            .join('&');
+      }
+
+      mapsUri = Uri(
+        scheme: 'geo',
+        path: latLgn,
+        query: encodeQueryParameters(<String, String>{
+          'q': query,
+        }),
+      );
+    } else {
+      //TODO: Conferir em https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html#//apple_ref/doc/uid/TP40007899-CH5-SW1
+      query = query.replaceAll(' ', '+');
+      mapsUri = Uri.parse('http://maps.apple.com/?q=$query&sll=$latLgn');
+    }
+
+    if (!await launchUrl(mapsUri)) {
+      throw 'Não foi possível concluir a operação';
+    }
+  }
+
+  void _openUber() {}
+
+  void _openWaze() {}
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +206,7 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
 
                     Expanded(
                       child: _buildCustomButton(
-                          onPressed: () {},
+                          onPressed: _showRemoveAlertDialog,
                           child: const Text('Ir para o local')),
                     ),
                     _buildCustomButton(
@@ -318,6 +359,75 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                 child:
                     SvgPicture.asset(AppImages.delete, fit: BoxFit.scaleDown)))
       ],
+    );
+  }
+
+  _showRemoveAlertDialog() {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    return showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            backgroundColor: colorScheme.onBackground,
+            title: Text(
+              'Selecione um dos apps',
+              style: textTheme.headline4!.copyWith(
+                  color: colorScheme.surface, fontWeight: FontWeight.w600),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildOpenAppButton(
+                    image: AppImages.taxis99,
+                    title: '99taxis',
+                    onTap: _open99taxis),
+                _buildOpenAppButton(
+                    image: AppImages.maps,
+                    title: 'Google maps',
+                    onTap: _openMap),
+                _buildOpenAppButton(
+                    image: AppImages.uber, title: 'Uber', onTap: _openUber),
+                _buildOpenAppButton(
+                    image: AppImages.waze, title: 'Waze', onTap: _openWaze),
+              ],
+            ),
+            actionsOverflowAlignment: OverflowBarAlignment.center,
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              AlertDialogActionButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  title: 'Cancelar',
+                  outlineBorder: true),
+            ],
+          );
+        })).then((value) => value);
+  }
+
+  Widget _buildOpenAppButton(
+      {required String image, required String title, void Function()? onTap}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(4)),
+                  image: DecorationImage(
+                      fit: BoxFit.cover, image: AssetImage(image))),
+            ),
+            // Image.asset(image, width: 48, height: 48),
+            const SizedBox(width: 8),
+            Text(title)
+          ],
+        ),
+      ),
     );
   }
 

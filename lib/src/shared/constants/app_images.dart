@@ -1,4 +1,5 @@
 class AppImages {
+  static const String taxis99 = 'images/99taxis.jpg';
   static const String background = 'images/LogoUP2U-NEGATIVOEDB-fundo.png';
   static const String logo = 'images/LogoUP2U-NEGATIVOEDB.png';
   static const String camera = 'images/camera.svg';
@@ -18,6 +19,7 @@ class AppImages {
   static const String home = 'images/home.svg';
   static const String locale = 'images/locale.svg';
   static const String lock = 'images/lock.svg';
+  static const String maps = 'images/maps.jpg';
   static const String mealTicket = 'images/meal_ticket.png';
   static const String megaphone = 'images/megaphone.png';
   static const String menu1 = 'images/menu_1.png';
@@ -29,5 +31,7 @@ class AppImages {
   static const String person = 'images/person.svg';
   static const String picpay = 'images/picpay.png';
   static const String pix = 'images/pix.png';
+  static const String uber = 'images/uber.png';
   static const String user = 'images/user.svg';
+  static const String waze = 'images/waze.jpg';
 }
