@@ -17,6 +17,7 @@ class AppImages {
   static const String heart = 'images/heart.svg';
   static const String heartFilled = 'images/heart_filled.svg';
   static const String home = 'images/home.svg';
+  static const String instagram = 'images/instagram.svg';
   static const String locale = 'images/locale.svg';
   static const String lock = 'images/lock.svg';
   static const String maps = 'images/maps.jpg';

@@ -5,12 +5,14 @@ class AlertDialogActionButton extends StatelessWidget {
   final bool filled;
   final bool outlineBorder;
   final String title;
+  final Widget? child;
   const AlertDialogActionButton(
       {Key? key,
       this.onPressed,
       this.filled = false,
       this.outlineBorder = false,
-      required this.title})
+      required this.title,
+      this.child})
       : super(key: key);
 
   @override
@@ -25,11 +27,12 @@ class AlertDialogActionButton extends StatelessWidget {
             side: outlineBorder
                 ? BorderSide(color: Theme.of(context).primaryColor, width: 1)
                 : null),
-        child: Text(title,
-            style: Theme.of(context).textTheme.headline4!.copyWith(
-                color: filled
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).primaryColor,
-                fontWeight: FontWeight.w300)));
+        child: child ??
+            Text(title,
+                style: Theme.of(context).textTheme.headline4!.copyWith(
+                    color: filled
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w300)));
   }
 }

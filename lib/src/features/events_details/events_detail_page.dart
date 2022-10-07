@@ -30,11 +30,6 @@ class EventsDetailPage extends StatefulWidget {
 }
 
 class _EventsDetailPageState extends State<EventsDetailPage> {
-  /* List<String> imagesUrl = [
-    'https://media.gettyimages.com/photos/crowd-of-people-at-concert-waving-arms-in-the-air-picture-id130899584?s=612x612',
-    'https://media.tacdn.com/media/attractions-splice-spp-674x446/07/2a/43/cc.jpg',
-    'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGFydHl8ZW58MHx8MHx8&w=1000&q=80'
-  ]; */
 
   List<String> imagesPub = [
     'images/party1.jpg',
@@ -51,9 +46,8 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
   String logoUrl = 'images/party_logo.png';
   String _wifiPassword = 'LOREMIPSUM123';
 
-  void _open99taxis() {}
-
-  void _openMap() async {
+  void _lauchMap() async {
+    //TODO: substituir por dados reais
     String query = 'Praia de Ipanema - Ipanema, RJ';
     late Uri mapsUri;
     const latLgn = "0,0";
@@ -85,10 +79,6 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
       throw 'Não foi possível concluir a operação';
     }
   }
-
-  void _openUber() {}
-
-  void _openWaze() {}
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +196,7 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
 
                     Expanded(
                       child: _buildCustomButton(
-                          onPressed: _showRemoveAlertDialog,
+                          onPressed: _lauchMap,
                           child: const Text('Ir para o local')),
                     ),
                     _buildCustomButton(
@@ -359,75 +349,6 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                 child:
                     SvgPicture.asset(AppImages.delete, fit: BoxFit.scaleDown)))
       ],
-    );
-  }
-
-  _showRemoveAlertDialog() {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-    return showDialog(
-        context: context,
-        builder: ((context) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            backgroundColor: colorScheme.onBackground,
-            title: Text(
-              'Selecione um dos apps',
-              style: textTheme.headline4!.copyWith(
-                  color: colorScheme.surface, fontWeight: FontWeight.w600),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildOpenAppButton(
-                    image: AppImages.taxis99,
-                    title: '99taxis',
-                    onTap: _open99taxis),
-                _buildOpenAppButton(
-                    image: AppImages.maps,
-                    title: 'Google maps',
-                    onTap: _openMap),
-                _buildOpenAppButton(
-                    image: AppImages.uber, title: 'Uber', onTap: _openUber),
-                _buildOpenAppButton(
-                    image: AppImages.waze, title: 'Waze', onTap: _openWaze),
-              ],
-            ),
-            actionsOverflowAlignment: OverflowBarAlignment.center,
-            actionsAlignment: MainAxisAlignment.center,
-            actions: [
-              AlertDialogActionButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  title: 'Cancelar',
-                  outlineBorder: true),
-            ],
-          );
-        })).then((value) => value);
-  }
-
-  Widget _buildOpenAppButton(
-      {required String image, required String title, void Function()? onTap}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(4)),
-                  image: DecorationImage(
-                      fit: BoxFit.cover, image: AssetImage(image))),
-            ),
-            // Image.asset(image, width: 48, height: 48),
-            const SizedBox(width: 8),
-            Text(title)
-          ],
-        ),
-      ),
     );
   }
 
